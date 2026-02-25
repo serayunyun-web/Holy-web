@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鴻萊興業有限公司｜聯絡我們</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="Footer.css">
+    <link rel="stylesheet" href="Navigation.css">
+    <link rel="stylesheet" href="front.css">
+    <link rel="stylesheet" href="contact.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- 回到最上面 -->
+<button id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- 導覽列 -->
+<nav id="navbar">
+    <a href="./front.html" id="logo">
+        <img src="./picture/banner.png" alt="Company Logo">
+    </a>
+
+    <div id="navbar-right">
+        <a href="./front.html">首頁</a>
+        <a href="./pon.html">服務項目</a>
+
+        <div class="nav-dropdown">
+            <a href="javascript:void(0)">
+                樣品專區 <i class="fas fa-caret-down"></i>
+            </a>
+            <div class="dropdown-menu">
+                <a href="sample01.html">數位燙金專用皮</a>
+                <a href="sample02.html">精裝專用皮</a>
+                <a href="sample03.html">車線</a>
+                <a href="sample04.html">護角</a>
+            </div>
+        </div>
+
+        <a href="check.html">線上查價</a>
+        <a href="contact.html" class="active">聯絡我們</a>
+    </div>
+</nav>
+
+<!-- Banner（獨立，不進 main） -->
+<section class="home-banner contact-banner">
+    <img src="./picture/聯絡.png" alt="鴻萊興業有限公司">
+</section>
+
+<!-- 聯絡頁主要內容 -->
+<main class="contact-page">
+
+    <!-- 左邊：地圖 -->
+    <section class="map-wrap">
+        <iframe class="map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3641.177433218791!2d120.67325707593588!3d24.13040617408055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34693d0516e3cb9b%3A0x9539cc10cdde7db4!2zNDAy6Ie65Lit5biC5Y2X5Y2A5pyJ5oGG6KGXNTLomZ8!5e0!3m2!1szh-TW!2stw!4v1766041705416!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </section>
+
+    <!-- 右邊：表單 -->
+    <section class="form-wrap">
+        <form id="contactForm" novalidate>
+
+            <!-- 成功提示 -->
+            <div id="formSuccess" class="form-success">
+                <span class="success-text">
+                    <i class="fas fa-check-circle"></i>
+                    已成功送出，我們會盡快與您聯絡！
+                </span>
+                <button type="button" class="close-btn">×</button>
+            </div>
+
+            <!-- 以下表單內容「完全保留你原本的」 -->
+            <!-- 公司名稱 -->
+            <div class="field">
+                <label for="company">公司名稱</label>
+                <input id="company" name="company" type="text">
+            </div>
+
+            <!-- 聯絡人 -->
+            <div class="field">
+                <label>聯絡人</label>
+                <div class="grid-2">
+                    <input type="text" placeholder="姓氏">
+                    <input type="text" placeholder="名字">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="field">
+                <label for="email">E-mail <span class="req">*</span></label>
+                <input id="email" name="email" type="email" placeholder="ex: myname@example.com">
+            </div>
+
+            <!-- 電話 -->
+            <div class="field">
+                <label>聯絡電話</label>
+                <div class="grid-2">
+                    <input type="tel" placeholder="電話含區碼">
+                    <input type="text" placeholder="分機">
+                </div>
+            </div>
+
+            <!-- 需求項目 -->
+            <div class="field">
+                <label>主要需求項目</label>
+                <div class="checks">
+                    <label><input type="checkbox"> 論文精裝</label>
+                    <label><input type="checkbox"> 彩色精裝</label>
+                    <label><input type="checkbox"> 平裝</label>
+                    <label><input type="checkbox"> 縫線裝</label>
+                    <label><input type="checkbox"> 施工圖裱冊</label>
+                    <label><input type="checkbox"> 蝶冊</label>
+                    <label><input type="checkbox"> 證書夾</label>
+                    <label><input type="checkbox"> 螺絲裝菜單</label>
+                    <label><input type="checkbox"> 檔案夾</label>
+                </div>
+            </div>
+
+            <!-- 檔案 -->
+            <div class="field">
+                <label for="myFile">附加檔案</label>
+                <input type="file" id="myFile" name="filename">
+            </div>
+
+            <!-- 說明 -->
+            <div class="field">
+                <label>需求說明</label>
+                <textarea rows="6"></textarea>
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit">送出</button>
+                <button class="btn dark" type="reset">清除重填</button>
+            </div>
+
+        </form>
+    </section>
+
+</main>
+
+  <!-- Footer 區塊 -------------------------------------------- -->
+    <footer id="footer">
+        <div class="footer-container">
+            <div class="footer-item">
+                <h3>店家資訊</h3>
+                <p>地址：台中市南區有恆街55號</p>
+                <p>電話：(04)2471-3063</p>
+                <p>營業時間：週一～週五 08:00 - 17:30</p>
+                <p>午休時間：週一～週五 12:00 - 13:30</p>
+            </div>
+            <div class="footer-item">
+                <h3>聯絡方式</h3>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    Email：
+                    <a href="mailto:hongguan8888@gmail.com">
+                        hongguan8888@gmail.com
+                    </a>
+                </p>
+                <p><i class="fab fa-line"></i> LINE ID：24713063</p>
+                <p><i class="fab fa-facebook"></i>
+                    Facebook：<a href="https://www.facebook.com/profile.php?id=61550895434655"
+                        target="_blank">鴻萊興業有限公司</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- JS -->
+    <script src="front.js"></script>
+    <script src="top.js"></script>
+    <script src="contact.js"></script>
+
+</body>
+
+</html>

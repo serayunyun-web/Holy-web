@@ -1,0 +1,321 @@
+/* 左右區塊並排版型 -------------------------------------------------- */
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 120px; /* 避開導覽列高度 */
+    gap: 40px;
+}
+
+/* 左側公司介紹區塊 */
+.company-box {
+    width: 30%;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    line-height: 1.7;
+}
+
+.company-box h2 {
+    margin-bottom: 10px;
+}
+
+/* 輪播圖 Slideshow -------------------------------------------------- */
+.slideshow-container {
+    width: 60%;
+    max-width: 700px;
+    position: relative;
+}
+
+.mySlides {
+    display: none;
+}
+
+.slideshow-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* 左右切換箭頭 */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    user-select: none;
+    transition: 0.4s;
+}
+
+.prev { left: 0; }
+.next { right: 0; }
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 圖片說明文字 */
+.text {
+    color: #fff;
+    font-size: 16px;
+    padding: 8px;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+/* 圖片編號文字 */
+.numbertext {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+/* 輪播下方圓點 */
+.dots {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dot {
+    cursor: pointer;
+    height: 14px;
+    width: 14px;
+    margin: 0 4px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.dot:hover, .dot.active {
+    background-color: #717171;
+}
+
+/* 淡入動畫效果 */
+.fade {
+    animation: fadeEffect 1.4s;
+}
+
+@keyframes fadeEffect {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+}
+
+/* 響應式設計（平板以下） -------------------------------------------------- */
+@media screen and (max-width: 768px) {
+
+    .content-wrapper {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 140px;
+    }
+
+    .company-box {
+        width: 90%;
+    }
+
+    .slideshow-container {
+        width: 90%;
+    }
+
+        .home-banner {
+        height: 280px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        padding: 40px 20px;
+    }
+
+    .company-box,
+    .slideshow-container {
+        width: 100%;
+    }
+}
+
+/* 響應式設計（手機） -------------------------------------------------- */
+@media screen and (max-width: 580px) {
+
+    #navbar {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    #navbar a {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-top: 6px;
+    }
+
+    .slideshow-container img {
+        height: 240px;
+    }
+}
+
+/* 常見問題 Q&A 區塊 -------------------------------------------------- */
+.qa-box {
+    width: 95%;
+    max-width: 1000px;
+    margin: 50px auto;
+}
+
+/* Q&A 問題按鈕 */
+.qa-btn {
+    width: 100%;
+    background-color: #ECEEDF;
+    padding: 18px 25px;
+    text-align: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-top: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.qa-btn:hover {
+    background-color: #d6d8c5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Q&A 回答內容 */
+.qa-content {
+    display: none;
+    background: #f7f7f7;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-top: 8px;
+    line-height: 1.7;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.qa-show {
+    display: block;
+}
+
+/* Q&A 內連結顏色 */
+.qa-content a {
+    color: #0056cc;          /* 一般狀態（藍色，可自行換） */
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* 滑過效果 */
+.qa-content a:hover {
+    color: #c44a2d;          /* 滑過變色（橘紅、很醒目） */
+}
+
+/* ===============================
+   最新消息區塊
+================================ */
+.news-box {
+    max-width: 1000px;
+    margin: 60px auto 40px;
+    padding: 0 20px;
+}
+
+.news-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 按鈕 */
+.news-btn {
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #ECEEDF;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.news-btn:hover {
+    background-color: #DDE6D8;
+}
+
+/* 內容 */
+.news-content {
+    display: none;
+    padding: 15px 20px;
+    background-color: #fff;
+    border-left: 4px solid #BBDCE5;
+    margin-bottom: 15px;
+    line-height: 1.7;
+}
+
+
+/* ===============================
+   全頁淡背景圖（方法一）
+================================ */
+body {
+    margin: 0;
+    padding-top: 80px; /* 導覽列高度 */
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans TC", sans-serif;
+
+    /* 背景圖 */
+    background-image: url("./picture/背景.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    background-attachment: fixed;
+
+    /* 預設底色 */
+    background-color: #fff;
+}
+
+/* ===============================
+   首頁 Banner
+================================ */
+.home-banner {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    margin-top: -80px; /* 吃回 navbar */
+}
+
+.home-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.home-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 關鍵：不變形裁切 */
+    display: block;
+}
+
+/* 手機版 */
+@media (max-width: 768px) {
+    .home-banner {
+        height: 200px;
+    }
+}
+
+/* ===============================
+   聯絡頁 Banner（縮小版）
+================================ */
+.contact-banner {
+  height: 300px;
+}
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鴻萊興業有限公司｜數位燙金專用皮</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="Footer.css">
+    <link rel="stylesheet" href="Navigation.css">
+    <link rel="stylesheet" href="sample.css">
+    <link rel="stylesheet" href="pon.css">
+    <link rel="stylesheet" href="front.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- 回到最上面 -->
+    <button id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 導覽列 -->
+    <nav id="navbar">
+        <a href="./front.html" id="logo">
+            <img src="./picture/banner.png" alt="Company Logo">
+        </a>
+
+        <div id="navbar-right">
+            <a href="./front.html">首頁</a>
+            <a href="./pon.html">服務項目</a>
+
+            <!-- 樣品專區下拉 -->
+            <div class="nav-dropdown">
+                <a href="javascript:void(0)">
+                    樣品專區 <i class="fas fa-caret-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="sample01.html" class="active">數位燙金專用皮</a>
+                    <a href="sample02.html">精裝專用皮</a>
+                    <a href="sample03.html">車線</a>
+                    <a href="sample04.html">護角</a>
+                </div>
+            </div>
+
+            <a href="check.html">線上查價</a>
+            <a href="contact.html">聯絡我們</a>
+        </div>
+    </nav>
+
+    <!-- Banner（獨立，不進 main） -->
+    <section class="home-banner contact-banner">
+        <img src="./picture/樣本01.png" alt="鴻萊興業有限公司">
+    </section>
+
+    <!-- 圖片放大 Modal -->
+    <div id="imgModal">
+        <span id="closeModal">&times;</span>
+        <img id="modalImg" alt="">
+    </div>
+
+    <!-- 樣品內容 -->
+    <section class="sample-section">
+
+        <h1>數位燙金專用皮</h1>
+        <p class="sample-desc">
+            以下為實際製作樣品示意，可作為選擇參考。
+            實際效果依材質與製作條件略有差異，若需要實體樣本歡迎與我們聯繫索取！
+        </p>
+
+        <!-- 圖片 + 文字 -->
+        <div class="sample-row">
+
+            <!-- 圖片 -->
+            <div class="sample-images">
+                <div class="zoom-img">
+                    <img src="./picture/樣品01.jpg" alt="樣品圖一">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/樣品02.jpg" alt="樣品圖二">
+                </div>
+            </div>
+
+            <!-- 說明文字 -->
+            <div class="sample-text">
+                <h3>特色說明</h3>
+                <p>
+                    數位燙金對於材質條件有一定要求，特別是在皮革選擇上，
+                    建議使用紋路較淺且表面平整的皮革，
+                    以確保燙金圖文能完整附著並呈現清晰細緻的效果。
+                    <br><br>
+                    金箔材質的選擇亦相當重要，不同金箔在亮度、附著力及耐磨度上皆有差異。
+                    若有特殊材質、顏色或設計需求，建議先進行測試，以確保最終成品效果符合預期。
+                </p>
+            </div>
+        </div>
+
+        <!-- 影片展示區 -->
+        <div class="sample-row video-row">
+
+            <!-- 左：影片 -->
+            <div class="sample-video">
+                <video controls playsinline>
+                    <source src="./測試.mp4" type="video/mp4">
+                    您的瀏覽器不支援影片播放
+                </video>
+            </div>
+
+            <!-- 右：說明 -->
+            <div class="sample-text">
+                <h3>堅固性測試影片</h3>
+                <p>
+                    【堅固耐刮、無痕清晰、快速實惠】是數位燙金的核心優勢。
+                    影片展示實際耐刮與牢固度測試，燙金層不掉色、不脫落，
+                    字樣依然清晰銳利。
+                    <br><br>
+                    適用於論文精裝、作品集等高質感裝訂需求，
+                    兼具美觀、效率與實用性。
+                </p>
+            </div>
+        </div>
+
+        <!-- 燙金方式比較表 -->
+        <section class="foil-compare-section">
+            <h2>燙金方式比較</h2>
+            <p class="compare-desc">
+                以下為常見燙金方式之差異比較，實際效果仍會依材質、設計與製作條件有所不同，
+                歡迎洽詢我們取得專業建議。
+            </p>
+
+            <div class="compare-table-wrap">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>比較項目</th>
+                            <th>數位燙金</th>
+                            <th>鋅版燙金</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>堅固度</td>
+                            <td>高，耐刮不易脫落</td>
+                            <td>高，壓紋深但視材質而定</td>
+                        </tr>
+                        <tr>
+                            <td>清晰度</td>
+                            <td>極佳，細字與線條表現優秀</td>
+                            <td>佳，細節受版材限制</td>
+                        </tr>
+                        <tr>
+                            <td>製作時間</td>
+                            <td>快速，無需開版</td>
+                            <td>較長，需製作鋅版</td>
+                        </tr>
+                        <tr>
+                            <td>價格</td>
+                            <td>較實惠，小量製作友善</td>
+                            <td>成本較高，適合大量製作</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-container">
+
+            <div class="footer-item">
+                <h3>店家資訊</h3>
+                <p>地址：台中市南區有恆街55號</p>
+                <p>電話：(04) 2471-3063</p>
+                <p>營業時間：週一～週五 08:00 - 17:30</p>
+                <p>午休時間：12:00 - 13:30</p>
+            </div>
+
+            <div class="footer-item">
+                <h3>聯絡方式</h3>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:hongguan8888@gmail.com">hongguan8888@gmail.com</a>
+                </p>
+                <p>
+                    <i class="fab fa-line"></i>
+                    LINE ID：24713063
+                </p>
+                <p>
+                    <i class="fab fa-facebook"></i>
+                    <a href="https://www.facebook.com/profile.php?id=61550895434655" target="_blank">
+                        鴻萊興業有限公司
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="front.js"></script>
+    <script src="top.js"></script>
+    <script src="simpli.js"></script>
+
+</body>
+
+</html>

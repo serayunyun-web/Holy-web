@@ -1,0 +1,239 @@
+/* 整個樣品區 */
+.sample-section {
+    max-width: 1100px;
+    margin: 120px auto;
+    padding: 0 20px;
+}
+
+/* 標題與說明 */
+.sample-section h1 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.sample-desc {
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 50px;
+    color: #333;
+}
+
+/* 左圖右文整排 */
+.sample-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+/* 左邊圖片區（最多 3 張一排） */
+.sample-images {
+    display: grid;
+    grid-template-columns: repeat(3, 220px); /* ⭐ 最多 3 張 */
+    gap: 20px;
+}
+
+
+.sample-images img {
+    width: 220px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* 右邊文字 */
+.sample-text {
+    flex: 1;
+}
+
+.sample-text h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.sample-text p {
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* ===============================
+   圖片放大效果（穩定版）
+   與 project-card 行為一致
+================================ */
+
+/* 圖片外層 */
+.zoom-img {
+    position: relative;
+    width: 220px;
+    height: 300px;              /* ⭐ 固定高度（可調） */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: #000;           /* 保底色（避免白邊） */
+}
+
+/* 圖片本體 */
+.zoom-img img {
+    width: 100%;
+    height: 100%;               /* ⭐ 關鍵 */
+    object-fit: cover;          /* ⭐ 裁切填滿 */
+    display: block;
+
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+/* hover 微放大 */
+.zoom-img:hover img {
+    transform: scale(1.05);
+}
+
+/* 放大鏡遮罩（正確做法） */
+.zoom-img::after {
+    content: "\f00e"; /* Font Awesome 放大鏡 */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 32px;
+    color: #fff;
+
+    background: rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+/* hover 顯示放大鏡 */
+.zoom-img:hover::after {
+    opacity: 1;
+}
+
+/* ===============================
+   圖片放大 Modal（一定要有）
+================================ */
+#imgModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+
+    display: none;               /* JS 會改成 flex */
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+}
+
+#imgModal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 12px;
+}
+
+/* 關閉按鈕 */
+#closeModal {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+
+    font-size: 40px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* 平板：2 張一排 */
+@media (max-width: 1024px) {
+    .sample-images {
+        grid-template-columns: repeat(2, 220px);
+    }
+}
+
+/* 手機：1 張一排 */
+@media (max-width: 600px) {
+    .sample-images {
+        grid-template-columns: 1fr;
+        justify-items: center; /* 圖片置中 */
+    }
+}
+/* ===============================
+   影片區塊（左影片＋右文字）
+================================ */
+.video-row {
+    margin-top: 40px;
+}
+
+.sample-video {
+    flex: 1;
+}
+
+.sample-video video {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: #000;
+}
+
+/* ===============================
+   燙金方式比較表
+================================ */
+.foil-compare-section {
+    max-width: 1100px;
+    margin: 80px auto 0;
+    padding: 0 20px;
+}
+
+.foil-compare-section h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.compare-desc {
+    text-align: center;
+    color: #555;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.compare-table-wrap {
+    overflow-x: auto; /* 手機可橫向滑動 */
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    min-width: 600px;
+}
+
+.compare-table th,
+.compare-table td {
+    border: 1px solid #ddd;
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.compare-table th {
+    background-color: #BBDCE5; /* 和你網站主色一致 */
+    font-weight: 700;
+}
+
+.compare-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+/* 手機字體微調 */
+@media (max-width: 768px) {
+    .foil-compare-section h2 {
+        font-size: 22px;
+    }
+}

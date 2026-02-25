@@ -1,0 +1,60 @@
+/* 頁尾 Footer -------------------------------------------------- */
+#footer {
+    background-color: #ECEEDF;
+    color: #333;
+    width: 100%;
+    padding: 30px 20px 10px 20px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.footer-item h3 {
+    margin-bottom: 10px;
+}
+
+.footer-item p, 
+.footer-item a {
+    margin: 4px 0;
+    color: #333;
+    text-decoration: none;
+}
+
+.footer-item a:hover {
+    text-decoration: underline;
+}
+
+.footer-copy {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Footer 在小螢幕時的排列調整 */
+@media screen and (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* Footer 聯絡資訊圖示樣式 */
+.footer-item i {
+    font-size: 20px;
+    vertical-align: middle;
+    margin-right: 8px;
+    color: #333;
+}
+

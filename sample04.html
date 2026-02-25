@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鴻萊興業有限公司:護腳</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="Footer.css">
+    <link rel="stylesheet" href="Navigation.css">
+    <link rel="stylesheet" href="sample.css">
+    <link rel="stylesheet" href="front.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- 回到最上面 -->
+    <button id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 導覽列 -->
+    <nav id="navbar">
+        <a href="./front.html" id="logo">
+            <img src="./picture/banner.png" alt="Company Logo">
+        </a>
+
+        <div id="navbar-right">
+            <a href="./front.html">首頁</a>
+            <a href="./pon.html">服務項目</a>
+
+            <div class="nav-dropdown">
+                <a href="javascript:void(0)">
+                    樣品專區 <i class="fas fa-caret-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="sample01.html">數位燙金專用皮</a>
+                    <a href="sample02.html">精裝專用皮</a>
+                    <a href="sample03.html">車線</a>
+                    <a href="sample04.html" class="active">護角</a>
+                </div>
+            </div>
+
+            <a href="check.html">線上查價</a>
+            <a href="contact.html">聯絡我們</a>
+        </div>
+    </nav>
+
+    <!-- Banner（獨立，不進 main） -->
+    <section class="home-banner contact-banner">
+        <img src="./picture/樣本01.png" alt="鴻萊興業有限公司">
+    </section>
+
+    <!-- 圖片放大 Modal -->
+    <div id="imgModal">
+        <span id="closeModal">&times;</span>
+        <img id="modalImg" alt="">
+    </div>
+
+    <!-- 樣品內容 -->
+    <section class="sample-section">
+
+        <h1>護角</h1>
+
+        <div class="sample-row">
+
+            <!-- 圖片 -->
+            <div class="sample-images">
+                <div class="zoom-img">
+                    <img src="./picture/護角01.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角02.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角03.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角04.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角05.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角06.jpg" alt="">
+                </div>
+                <div class="zoom-img">
+                    <img src="./picture/護角07.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- 說明文字 -->
+            <div class="sample-text">
+                <h3>特色:</h3>
+                <p>
+                    護角可有效保護精裝成品的四角，提升整體耐用度，並同時增添成品的高級質感與完整度。適用於論文、證書夾及各式精裝製品，讓成品在長期使用下仍能保持良好外觀。若為大量製作需求，請務必提前告知，以利安排製作時程，交期約需
+                    2～3 週，實際時間將依數量與製作內容而定。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-container">
+            <div class="footer-item">
+                <h3>店家資訊</h3>
+                <p>地址：台中市南區有恆街55號</p>
+                <p>電話：(04)2471-3063</p>
+                <p>營業時間：週一～週五 08:00 - 17:30</p>
+                <p>午休時間：12:00 - 13:30</p>
+            </div>
+
+            <div class="footer-item">
+                <h3>聯絡方式</h3>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:hongguan8888@gmail.com">hongguan8888@gmail.com</a>
+                </p>
+                <p><i class="fab fa-line"></i> LINE ID：24713063</p>
+                <p>
+                    <i class="fab fa-facebook"></i>
+                    <a href="https://www.facebook.com/profile.php?id=61550895434655" target="_blank">
+                        鴻萊興業有限公司
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="front.js"></script>
+    <script src="top.js"></script>
+    <script src="simpli.js"></script>
+
+
+</body>
+
+</html>
