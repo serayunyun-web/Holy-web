@@ -7,8 +7,6 @@ import { activeProducts, getProductBySlug, getRelatedProducts } from "@/data/cat
 
 type ProductPageProps = { params: Promise<{ slug: string }> };
 
-export const instant = false;
-
 export function generateStaticParams() {
   return activeProducts.map((product) => ({ slug: product.slug }));
 }
