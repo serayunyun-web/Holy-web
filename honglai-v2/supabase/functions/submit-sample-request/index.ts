@@ -1,6 +1,6 @@
 import { adminClient, allowSubmission, publicNumber } from "../_shared/database.ts";
 import { allowedOrigin, corsHeaders, response } from "../_shared/http.ts";
-import { email, fingerprint, phone, text, uuid, type JsonObject } from "../_shared/validation.ts";
+import { email, phone, submissionFingerprints, text, uuid, type JsonObject } from "../_shared/validation.ts";
 
 Deno.serve(async (request) => {
   const origin = allowedOrigin(request);
@@ -17,7 +17,7 @@ Deno.serve(async (request) => {
     const previous = await client.from("sample_requests").select("request_no").eq("idempotency_key", idempotencyKey).maybeSingle();
     if (previous.error) throw previous.error;
     if (previous.data) return response(origin, 200, { referenceNo: previous.data.request_no, duplicate: true });
-    if (!await allowSubmission(client, await fingerprint(request, emailValue), "sample_request")) {
+    if (!await allowSubmission(client, await submissionFingerprints(request, emailValue), "sample_request")) {
       return response(origin, 429, { error: "rate_limited" });
     }
     const record = {

@@ -9,14 +9,14 @@ export function adminClient() {
 
 export async function allowSubmission(
   client: ReturnType<typeof adminClient>,
-  fingerprint: string,
+  fingerprints: { ip: string; email: string },
   formType: "business_inquiry" | "sample_request",
 ) {
   const { data, error } = await client.rpc("claim_public_submission", {
-    p_fingerprint: fingerprint,
+    p_ip_fingerprint: fingerprints.ip,
+    p_email_fingerprint: fingerprints.email,
     p_form_type: formType,
     p_limit: 5,
-    p_window_minutes: 60,
   });
   if (error) throw error;
   return data === true;

@@ -1,6 +1,6 @@
 import { adminClient, allowSubmission, publicNumber } from "../_shared/database.ts";
 import { allowedOrigin, corsHeaders, response } from "../_shared/http.ts";
-import { email, fingerprint, isoDate, phone, positiveInteger, text, uuid, type JsonObject } from "../_shared/validation.ts";
+import { email, isoDate, phone, positiveInteger, submissionFingerprints, text, uuid, type JsonObject } from "../_shared/validation.ts";
 
 const cooperationTypes = new Set(["半成品加工", "完整裝訂代工", "特殊加工與客製", "其他合作需求"]);
 
@@ -22,7 +22,7 @@ Deno.serve(async (request) => {
     const previous = await client.from("business_inquiries").select("inquiry_no").eq("idempotency_key", idempotencyKey).maybeSingle();
     if (previous.error) throw previous.error;
     if (previous.data) return response(origin, 200, { referenceNo: previous.data.inquiry_no, duplicate: true });
-    if (!await allowSubmission(client, await fingerprint(request, emailValue), "business_inquiry")) {
+    if (!await allowSubmission(client, await submissionFingerprints(request, emailValue), "business_inquiry")) {
       return response(origin, 429, { error: "rate_limited" });
     }
     const record = {

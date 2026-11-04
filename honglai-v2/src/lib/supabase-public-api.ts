@@ -13,7 +13,7 @@ export async function submitPublicForm(functionName: string, payload: Record<str
   try {
     response = await fetch(`${url}/functions/v1/${functionName}`, {
       method: "POST",
-      headers: { "content-type": "application/json", apikey: key, authorization: `Bearer ${key}` },
+      headers: { "content-type": "application/json", apikey: key },
       body: JSON.stringify(payload),
     });
   } catch {

@@ -91,11 +91,11 @@ create table public.sample_request_status_history (
 );
 
 create table public.public_submission_limits (
+  id bigint generated always as identity primary key,
   fingerprint text not null,
+  fingerprint_type text not null check (fingerprint_type in ('ip', 'email')),
   form_type text not null check (form_type in ('business_inquiry', 'sample_request')),
-  window_started_at timestamptz not null,
-  attempt_count integer not null default 1 check (attempt_count > 0),
-  primary key (fingerprint, form_type, window_started_at)
+  occurred_at timestamptz not null default now()
 );
 
 create table public.audit_logs (
@@ -115,6 +115,10 @@ create index business_inquiries_email_idx on public.business_inquiries (lower(em
 create index sample_requests_status_created_idx on public.sample_requests (status, created_at desc);
 create index sample_requests_email_idx on public.sample_requests (lower(email));
 create index audit_logs_entity_idx on public.audit_logs (entity_type, entity_id, created_at desc);
+create index public_submission_limits_lookup_idx
+  on public.public_submission_limits (form_type, fingerprint_type, fingerprint, occurred_at desc);
+create index public_submission_limits_cleanup_idx
+  on public.public_submission_limits (occurred_at);
 
 create or replace function private.has_role(required_roles public.app_role[])
 returns boolean
@@ -199,10 +203,10 @@ create trigger sample_request_initial_status after insert on public.sample_reque
 for each row execute function private.log_initial_request_status();
 
 create or replace function public.claim_public_submission(
-  p_fingerprint text,
+  p_ip_fingerprint text,
+  p_email_fingerprint text,
   p_form_type text,
-  p_limit integer default 5,
-  p_window_minutes integer default 60
+  p_limit integer default 5
 )
 returns boolean
 language plpgsql
@@ -210,22 +214,51 @@ security definer
 set search_path = ''
 as $$
 declare
-  v_window timestamptz := date_trunc('hour', now());
-  v_count integer;
+  v_cutoff timestamptz := now() - interval '60 minutes';
+  v_ip_count integer;
+  v_email_count integer;
 begin
   if p_form_type not in ('business_inquiry', 'sample_request')
-    or p_limit < 1 or p_window_minutes <> 60 then
+    or p_limit < 1 or p_limit > 20
+    or char_length(p_ip_fingerprint) <> 64
+    or char_length(p_email_fingerprint) <> 64 then
+    return false;
+  end if;
+
+  -- Serialize checks for each hashed dimension so concurrent requests cannot
+  -- both observe the same count and exceed the limit.
+  perform pg_advisory_xact_lock(hashtextextended('ip:' || p_form_type || ':' || p_ip_fingerprint, 0));
+  perform pg_advisory_xact_lock(hashtextextended('email:' || p_form_type || ':' || p_email_fingerprint, 0));
+
+  -- Keep only a short operational history. No raw IP or email is stored.
+  delete from public.public_submission_limits
+  where occurred_at < now() - interval '24 hours';
+
+  select count(*) into v_ip_count
+  from public.public_submission_limits
+  where form_type = p_form_type
+    and fingerprint_type = 'ip'
+    and fingerprint = p_ip_fingerprint
+    and occurred_at > v_cutoff;
+
+  select count(*) into v_email_count
+  from public.public_submission_limits
+  where form_type = p_form_type
+    and fingerprint_type = 'email'
+    and fingerprint = p_email_fingerprint
+    and occurred_at > v_cutoff;
+
+  if v_ip_count >= p_limit or v_email_count >= p_limit then
     return false;
   end if;
 
   insert into public.public_submission_limits
-    (fingerprint, form_type, window_started_at, attempt_count)
-  values (p_fingerprint, p_form_type, v_window, 1)
-  on conflict (fingerprint, form_type, window_started_at)
-  do update set attempt_count = public.public_submission_limits.attempt_count + 1
-  returning attempt_count into v_count;
+    (fingerprint, fingerprint_type, form_type)
+  values
+    (p_ip_fingerprint, 'ip', p_form_type),
+    (p_email_fingerprint, 'email', p_form_type);
 
-  return v_count <= p_limit;
+  return true;
 end;
 $$;
 
@@ -239,14 +272,16 @@ alter table public.public_submission_limits enable row level security;
 alter table public.audit_logs enable row level security;
 
 revoke all on all tables in schema public from anon, authenticated;
-revoke all on function public.claim_public_submission(text, text, integer, integer) from public, anon, authenticated;
+revoke all on function public.claim_public_submission(text, text, text, integer) from public, anon, authenticated;
 revoke all on function private.has_role(public.app_role[]) from public;
-grant execute on function public.claim_public_submission(text, text, integer, integer) to service_role;
+grant execute on function public.claim_public_submission(text, text, text, integer) to service_role;
 grant execute on function private.has_role(public.app_role[]) to authenticated;
 grant usage on schema public to authenticated;
 grant usage on schema private to authenticated;
 grant select on public.profiles, public.user_roles to authenticated;
-grant select, update on public.business_inquiries, public.sample_requests to authenticated;
+grant select on public.business_inquiries, public.sample_requests to authenticated;
+grant update (status, assigned_to, internal_notes) on public.business_inquiries to authenticated;
+grant update (status, assigned_to, internal_notes) on public.sample_requests to authenticated;
 grant select on public.business_inquiry_status_history, public.sample_request_status_history to authenticated;
 
 create policy staff_read_business_inquiries on public.business_inquiries

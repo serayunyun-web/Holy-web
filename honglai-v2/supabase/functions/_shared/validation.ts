@@ -40,11 +40,20 @@ export function isoDate(input: JsonObject, key: string) {
   return value;
 }
 
-export async function fingerprint(request: Request, emailValue: string) {
-  const salt = Deno.env.get("RATE_LIMIT_SALT");
-  if (!salt) throw new Error("server:missing-rate-limit-salt");
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const bytes = new TextEncoder().encode(`${salt}|${forwarded}|${emailValue}`);
+async function sha256(value: string) {
+  const bytes = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export async function submissionFingerprints(request: Request, emailValue: string) {
+  const salt = Deno.env.get("RATE_LIMIT_SALT");
+  if (!salt) throw new Error("server:missing-rate-limit-salt");
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim();
+  const ip = realIp || forwarded || "unknown";
+  return {
+    ip: await sha256(`${salt}|ip|${ip}`),
+    email: await sha256(`${salt}|email|${emailValue.toLowerCase()}`),
+  };
 }
