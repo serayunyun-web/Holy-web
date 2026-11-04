@@ -218,10 +218,14 @@ declare
   v_ip_count integer;
   v_email_count integer;
 begin
-  if p_form_type not in ('business_inquiry', 'sample_request')
+  if p_ip_fingerprint is null
+    or p_email_fingerprint is null
+    or p_form_type is null
+    or p_limit is null
+    or p_form_type not in ('business_inquiry', 'sample_request')
     or p_limit < 1 or p_limit > 20
-    or char_length(p_ip_fingerprint) <> 64
-    or char_length(p_email_fingerprint) <> 64 then
+    or p_ip_fingerprint !~ '^[0-9a-fA-F]{64}$'
+    or p_email_fingerprint !~ '^[0-9a-fA-F]{64}$' then
     return false;
   end if;
 
@@ -271,9 +275,21 @@ alter table public.sample_request_status_history enable row level security;
 alter table public.public_submission_limits enable row level security;
 alter table public.audit_logs enable row level security;
 
-revoke all on all tables in schema public from anon, authenticated;
+revoke all on table
+  public.profiles,
+  public.user_roles,
+  public.business_inquiries,
+  public.business_inquiry_status_history,
+  public.sample_requests,
+  public.sample_request_status_history,
+  public.public_submission_limits,
+  public.audit_logs
+from anon, authenticated;
 revoke all on function public.claim_public_submission(text, text, text, integer) from public, anon, authenticated;
 revoke all on function private.has_role(public.app_role[]) from public;
+revoke all on function private.log_business_inquiry_status() from public;
+revoke all on function private.log_sample_request_status() from public;
+revoke all on function private.log_initial_request_status() from public;
 grant execute on function public.claim_public_submission(text, text, text, integer) to service_role;
 grant execute on function private.has_role(public.app_role[]) to authenticated;
 grant usage on schema public to authenticated;
