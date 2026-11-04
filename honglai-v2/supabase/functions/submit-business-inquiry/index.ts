@@ -1,3 +1,4 @@
+import { hasValidPublishableKey } from "../_shared/auth.ts";
 import { adminClient, allowSubmission, publicNumber } from "../_shared/database.ts";
 import { allowedOrigin, corsHeaders, response } from "../_shared/http.ts";
 import { email, isoDate, phone, positiveInteger, submissionFingerprints, text, uuid, type JsonObject } from "../_shared/validation.ts";
@@ -11,6 +12,7 @@ Deno.serve(async (request) => {
   if (request.method !== "POST") return response(origin, 405, { error: "method_not_allowed" });
 
   try {
+    if (!await hasValidPublishableKey(request)) return response(origin, 401, { error: "invalid_api_key" });
     const body = await request.json() as JsonObject;
     const emailValue = email(body, "email");
     const cooperationType = text(body, "cooperationType", 80, true)!;
