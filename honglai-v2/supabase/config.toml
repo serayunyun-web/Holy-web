@@ -1,0 +1,7 @@
+project_id = "honglai-v2"
+
+[functions.submit-business-inquiry]
+verify_jwt = false
+
+[functions.submit-sample-request]
+verify_jwt = false

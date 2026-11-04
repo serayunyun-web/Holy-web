@@ -23,7 +23,7 @@ export function ServicesCatalog({ categories, products, allFilter }: ServicesCat
     <section className="services-catalog-section" aria-labelledby="catalog-title">
       <div className="page-container">
         <div className="category-toolbar" aria-label="產品分類篩選">
-          <p className="category-toolbar-note">目前分類為開發階段暫定架構，後續可由集中資料或 Supabase 調整。</p>
+          <p className="category-toolbar-note">可依用途切換分類；同一項產品可能同時適合多種需求。</p>
           <div className="category-filter-list" role="group" aria-label="選擇產品分類">
             <button aria-pressed={selectedCategoryId === allFilter.id} className="category-filter" onClick={() => setSelectedCategoryId(allFilter.id)} type="button">
               <span aria-hidden="true">{allFilter.icon}</span><strong>{allFilter.name}</strong><small>{products.length} 項</small>

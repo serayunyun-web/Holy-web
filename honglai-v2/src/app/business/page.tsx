@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/page-hero";
+import Link from "next/link";
+import { BusinessInquiryForm } from "@/components/business-inquiry-form";
+import { cooperationBenefits, cooperationModes, cooperationSteps, partnerAudiences } from "@/data/business";
 
-export const metadata: Metadata = { title: "企業合作" };
+export const metadata: Metadata = { title: "企業合作", description: "數位燙金皮革封面、半成品加工、完整裝訂代工與特殊加工合作。" };
 
 export default function BusinessPage() {
-  return <main><PageHero eyebrow="Business" title="企業合作" description="同業代工、大量製作與特殊規格皆採人工詢價，由專人確認產能、交期及正式價格。" /><section className="section page-container content-grid"><article className="content-card"><h2>同業代工</h2><p>依合作需求確認工法、規格、數量與交期；詳細合作條件待公司確認後提供。</p></article><article className="content-card"><h2>大量與客製</h2><p>特殊尺寸、材料或大量案件不套用網站預估價格，改由專人逐案評估。</p></article></section></main>;
+  return <main className="business-page">
+    <section className="business-hero"><div className="page-container business-hero-grid"><div><p className="eyebrow">Business Partnership</p><h1>專業印後加工，<span>成為你的製作夥伴</span></h1><p>從數位燙金皮革封面、半成品加工到完整書冊裝訂，鴻萊興業提供彈性的印後加工服務，協助影印店、印刷業者及設計工作室拓展服務項目。</p><div className="hero-actions"><a className="button button-primary" href="#partnership-service">了解合作服務</a><a className="button button-secondary" href="#business-inquiry">洽詢企業合作</a></div></div><div className="leather-cover-art" role="img" aria-label="數位燙金皮革封面示意佔位圖"><span>正式成品照片待補</span><strong>數位燙金<br />皮革封面</strong><small>半成品加工示意</small></div></div></section>
+    <section className="business-section page-container business-feature" id="partnership-service"><div className="leather-detail-art" aria-hidden="true"><i /><span>燙金細節與材質照片預留區</span></div><div><p className="eyebrow">Featured Service</p><h2>數位燙金皮革封面・半成品加工</h2><p>鴻萊興業可先完成皮革封面的數位燙金加工，製作成半成品，再交由外縣市合作影印店自行完成後續裝訂。合作店家可以保留原有製作流程，同時取得專業加工支援。</p><ul className="check-list"><li>支援單本及少量客製</li><li>提供數位燙金皮革封面加工</li><li>可依需求提供半成品</li><li>合作店家可自行完成後續裝訂</li><li>可透過寄送方式進行跨縣市合作</li></ul></div></section>
+    <section className="business-section business-soft"><div className="page-container"><div className="business-heading"><p className="eyebrow">Cooperation Models</p><h2>三種合作方式，保留你的製作彈性</h2></div><div className="cooperation-card-grid">{cooperationModes.map(mode=><article className="cooperation-card" key={mode.key}><span>{mode.icon}</span><h3>{mode.title}</h3><p>{mode.description}</p><small>{mode.example}</small><Link className="text-link" href={`/business?cooperation=${encodeURIComponent(mode.key)}#business-inquiry`}>洽詢此服務 →</Link></article>)}</div></div></section>
+    <section className="business-section page-container"><div className="business-heading"><p className="eyebrow">Who We Work With</p><h2>適合提出合作需求的對象</h2><p>以下為服務適用對象，不代表皆為現有合作客戶。</p></div><div className="audience-chip-grid">{partnerAudiences.map((item,index)=><div key={item}><span>{String(index+1).padStart(2,"0")}</span><strong>{item}</strong></div>)}</div></section>
+    <section className="business-section business-benefit-section"><div className="page-container"><div className="business-heading"><p className="eyebrow">Partnership Benefits</p><h2>為合作夥伴提供更有彈性的製作選擇</h2></div><div className="benefit-grid">{cooperationBenefits.map(([title,description])=><article key={title}><h3>{title}</h3><p>{description}</p></article>)}</div></div></section>
+    <section className="business-section page-container"><div className="business-heading"><p className="eyebrow">Workflow</p><h2>合作流程</h2></div><ol className="business-process">{cooperationSteps.map(([number,title,description])=><li key={number}><span>{number}</span><h3>{title}</h3><p>{description}</p></li>)}</ol></section>
+    <section className="business-section business-form-section" id="business-inquiry"><div className="page-container"><div className="business-heading"><p className="eyebrow">Business Inquiry</p><h2>企業合作洽詢</h2><p>填寫並送出需求後，系統會建立申請紀錄；合作資格與製作內容仍由鴻萊人工審核。</p></div><BusinessInquiryForm /></div></section>
+    <section className="business-section page-container business-next-grid"><article><p className="eyebrow">Material Samples</p><h2>材質樣品冊</h2><p>想了解皮革材質與加工效果？可先填寫樣品需求介面，未來由專人確認可提供內容及申請方式。</p><Link className="button button-secondary" href="/business/sample-request">查看樣品冊申請介面</Link></article><article><p className="eyebrow">Partner Area</p><h2>合作廠商專區</h2><p>了解未來專區規劃與合作資格申請方式；目前尚未提供登入功能。</p><Link className="button button-secondary" href="/partners">了解合作廠商專區</Link></article></section>
+  </main>;
 }
