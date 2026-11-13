@@ -109,6 +109,11 @@ const productPhotoCount: Record<string, number> = {
   "thesis-binding": 3,
   "certificate-folder": 3,
   "construction-book": 3,
+  "engineering-contract": 3,
+  "perfect-binding": 3,
+  "hardcover": 3,
+  "sewn-softcover": 3,
+  "sewn-hardcover": 3,
 };
 
 const photoPath = (slug: string, key: string) => `/images/products/${slug}-${key}.webp`;
