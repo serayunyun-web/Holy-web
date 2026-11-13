@@ -69,21 +69,7 @@ export const productCategories: readonly ProductCategory[] = [
 
 const productNotes = ["本頁不顯示未確認價格，也不構成正式報價或訂單。", "正式價格、規格與交期須經鴻萊人工審核，並由客戶確認後才安排製作。"] as const;
 
-const placeholderDetails = (productName: string): ProductDetailSections => ({
-  specs: [
-    { label: "適用", items: ["【暫存內容】適用對象待鴻萊確認"] },
-    { label: "材質", items: ["封面｜待確認", "內頁｜待確認"] },
-    { label: "規格", items: ["尺寸｜A4（21 × 29.7 cm）", "頁數｜待確認"] },
-    { label: "交期", items: ["待確認"] },
-  ],
-  story: [
-    `【暫存內容】${productName}的正式產品介紹尚待鴻萊確認。`,
-    "這裡會放 2～3 段短介紹，每段一到兩句，說明這種做法的特色與適合的作品。",
-  ],
-  notes: productNotes,
-});
-
-/** 裝訂類產品的正式介紹：左欄「結構／適合／留意」，右欄每段以 \n 斷句 */
+/** 產品正式介紹：左欄「結構／適合／留意」，右欄每段以 \n 斷句 */
 const bindingDetails = (structure: readonly string[], suitable: readonly string[], caution: readonly string[], story: readonly string[]): ProductDetailSections => ({
   specs: [
     { label: "結構", items: structure },
@@ -132,31 +118,71 @@ const gallery = (slug: string, title: string, tone: CatalogTone): readonly Produ
 export const products: readonly Product[] = [
   {
     id: "prd-thesis-binding", slug: "thesis-binding", title: "論文",
-    description: "【暫存內容】論文精裝、彩色精裝與平裝等製作，依學校規範確認封面與燙印。",
+    description: "依學校規範製作平裝或精裝論文，可燙印校名、題目與姓名。",
     categoryIds: ["cat-books"], cardImage: cardImageFor("thesis-binding"), gallery: gallery("thesis-binding", "論文", "teal"),
     basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
-    details: placeholderDetails("論文"), tone: "teal", displayOrder: 10, isActive: true, isPlaceholder: true, quoteMode: "manual",
+    details: bindingDetails(
+      ["平裝｜膠裝", "精裝｜硬殼封面・方背", "加工｜燙金"],
+      ["碩博士畢業論文、學位論文、研究報告"],
+      ["封面顏色與燙金內容依各校規定", "請先向系所與圖書館確認格式"],
+      [
+        "畢業前的最後一哩路\n從內頁到封面\n一本一本仔細裝訂成冊",
+        "依照學校規定挑選封面顏色\n燙上校名、題目與姓名\n交出去的，是幾年的心血",
+        "平裝、精裝都能做\n一本也接\n不用擔心數量太少",
+      ],
+    ),
+    tone: "teal", displayOrder: 10, isActive: true, isPlaceholder: false, quoteMode: "manual",
   },
   {
     id: "prd-certificate-folder", slug: "certificate-folder", title: "證書夾",
-    description: "【暫存內容】依證書尺寸與使用情境確認材質及加工方式。",
+    description: "紙面或皮面證書夾，可燙印校徽、Logo 與文字。",
     categoryIds: ["cat-business", "cat-creative"], cardImage: cardImageFor("certificate-folder"), gallery: gallery("certificate-folder", "證書夾", "brown"),
     basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
-    details: placeholderDetails("證書夾"), tone: "brown", displayOrder: 20, isActive: true, isPlaceholder: true, quoteMode: "manual",
+    details: bindingDetails(
+      ["樣式｜兩片式、泡棉兩片式、三角式、磁扣翻蓋式", "開啟｜左右翻、上下翻", "固定｜四角、緞帶或內袋"],
+      ["畢業證書、聘書、獎狀、感謝狀、結婚書約"],
+      ["請提供證書實際尺寸", "燙金內容需事先確認文字與 Logo"],
+      [
+        "一張證書\n代表的是一段努力\n值得好好收著",
+        "紙面、皮面都能選\n燙上校徽、公司 Logo 或文字\n拿在手上就是正式的份量",
+        "兩片式簡潔大方\n加一層泡棉更有厚度\n三角或緞帶固定內頁，取放都方便",
+      ],
+    ),
+    tone: "brown", displayOrder: 20, isActive: true, isPlaceholder: false, quoteMode: "manual",
   },
   {
     id: "prd-construction-book", slug: "construction-book", title: "工程施工本",
-    description: "【暫存內容】施工圖裱冊製作，可依圖面尺寸與封面材質選擇。",
+    description: "大型工程圖摺疊成冊，方便帶到現場翻閱。",
     categoryIds: ["cat-business"], cardImage: cardImageFor("construction-book"), gallery: gallery("construction-book", "工程施工本", "teal"),
     basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
-    details: placeholderDetails("工程施工本"), tone: "teal", displayOrder: 30, isActive: true, isPlaceholder: true, quoteMode: "manual",
+    details: bindingDetails(
+      ["圖面｜A1、A2、A3 工程圖摺疊成冊", "封面｜施工本專用皮、厚軟皮、透明膠片", "裝訂｜膠裝、螺絲裝、打孔裝冊"],
+      ["建築施工圖冊、土木工程圖、施工資料本"],
+      ["請提供原始圖面尺寸與張數", "摺圖方式依裝訂後尺寸決定"],
+      [
+        "一張張大圖\n精準摺成好拿的尺寸\n再和文字說明合成一本",
+        "帶到工地現場\n攤開就是完整圖面\n收起來整齊不散亂",
+        "封面用耐磨的施工本專用皮\n經得起現場反覆翻閱\n也可以燙上工程名稱",
+      ],
+    ),
+    tone: "teal", displayOrder: 30, isActive: true, isPlaceholder: false, quoteMode: "manual",
   },
   {
     id: "prd-engineering-contract", slug: "engineering-contract", title: "工程合約書",
-    description: "【暫存內容】工程合約書平裝、精裝及封面加工，可依文件需求選擇製作方式。",
+    description: "合約本文與附件依序裝訂成冊，頁面固定、方便蓋騎縫章。",
     categoryIds: ["cat-business"], cardImage: cardImageFor("engineering-contract"), gallery: gallery("engineering-contract", "工程合約書", "brown"),
     basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "5-2" }],
-    details: placeholderDetails("工程合約書"), tone: "brown", displayOrder: 40, isActive: true, isPlaceholder: true,
+    details: bindingDetails(
+      ["裝訂｜膠裝、平裝、精裝", "內容｜合約本文與附件依序裝訂成冊", "加工｜封面燙金"],
+      ["工程合約、投標文件、價格分析表、工程圖說附件"],
+      ["公家機關或特定專案若有指定格式，請先提供規範", "一式多份請註明份數"],
+      [
+        "合約本文、價格分析表、工程圖說\n依照順序\n一頁一頁裝訂成冊",
+        "裝訂後頁面固定、不能抽換\n方便蓋騎縫章\n讓每一份合約都完整可信",
+        "一式多份也能一次完成\n封面燙上工程名稱\n正式又好辨認",
+      ],
+    ),
+    tone: "brown", displayOrder: 40, isActive: true, isPlaceholder: false,
     sourceCategory: "工程合約書", priceSourceRefs: ["5-2"], quoteMode: "manual",
   },
   {
