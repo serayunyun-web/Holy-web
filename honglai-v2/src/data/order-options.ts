@@ -1,9 +1,9 @@
-export type ProductId = "book-binding" | "menu" | "certificate-folder" | "construction-book" | "unsure";
-export type FieldType = "text" | "number" | "select" | "textarea" | "radio";
+export type FormType = "book-binding" | "menu" | "certificate-folder" | "construction-book" | "unsure";
+export type FieldType = "text" | "number" | "date" | "select" | "textarea" | "radio";
 export type OrderField = { id: string; label: string; type: FieldType; options?: readonly string[]; placeholder?: string; required?: boolean; help?: string; when?: { field: string; values: readonly string[] } };
 
 export const safe = ["不需要", "尚未決定，請專人建議"] as const;
-export const products = [
+export const formTypes = [
   { id: "book-binding", icon: "冊", name: "書籍裝訂", note: "論文、作品集、工程合約書與一般書冊" },
   { id: "menu", icon: "單", name: "菜單", note: "單張、摺頁、護貝與裝訂式菜單" },
   { id: "certificate-folder", icon: "證", name: "證書夾", note: "兩片式、三角與磁扣翻蓋式" },
@@ -27,8 +27,7 @@ const book: OrderField[] = [
   { id: "screw", label: "螺絲形式與孔數", type: "text", placeholder: "不確定可留白", when: { field: "binding", values: ["螺絲裝"] } },
   { id: "corner", label: "護角", type: "select", options: ["不需要", "選擇護角編號", "尚未決定，請專人建議"], when: { field: "binding", values: ["螺絲裝"] } },
   { id: "coverFilm", label: "封面膠片", type: "select", options: ["需要", "不需要", "不確定"], when: { field: "binding", values: ["雙線圈", "環裝"] } },
-  { id: "saddleCover", label: "是否包含封面", type: "select", options: ["包含", "不包含", "不確定"], when: { field: "binding", values: ["騎馬釘"] } },
-];
+  { id: "saddleCover", label: "是否包含封面", type: "select", options: ["包含", "不包含", "不確定"], when: { field: "binding", values: ["騎馬釘"] } },];
 const menu: OrderField[] = [
   { id: "menuType", label: "菜單類型", type: "select", required: true, options: ["單張菜單", "對摺／多摺菜單", "雙面護貝菜單", "螺絲裝菜單", "Q 桿菜單", "書冊式菜單", "不確定"] },
   { id: "size", label: "成品尺寸", type: "select", options: ["A3", "A4", "A5", "自訂尺寸", "不確定"] }, { id: "openSize", label: "展開尺寸", type: "text", when: { field: "menuType", values: ["對摺／多摺菜單"] } },
@@ -55,8 +54,27 @@ const construction: OrderField[] = [
 const unsure: OrderField[] = [
   { id: "item", label: "想製作的物品", type: "text", required: true }, { id: "occasion", label: "使用場合或用途", type: "text" }, { id: "approxSize", label: "大約尺寸", type: "text" }, { id: "reference", label: "是否有參考成品", type: "select", options: ["有", "沒有", "不確定"] }, { id: "appearance", label: "希望的材質或外觀", type: "textarea" }, { id: "help", label: "希望專人協助判斷的問題", type: "textarea" },
 ];
-export const fieldsByProduct: Record<ProductId, readonly OrderField[]> = { "book-binding": book, menu, "certificate-folder": certificate, "construction-book": construction, unsure };
+export const productFormTypeBySlug = {
+  "thesis-binding": "book-binding",
+  "certificate-folder": "certificate-folder",
+  "construction-book": "construction-book",
+  "engineering-contract": "book-binding",
+  "perfect-binding": "book-binding",
+  "hardcover": "book-binding",
+  "sewn-softcover": "book-binding",
+  "sewn-hardcover": "book-binding",
+  "exposed-spine-sewn": "book-binding",
+  "machine-sewn-binding": "book-binding",
+  "saddle-stitch": "book-binding",
+  "ring-binding": "book-binding",
+  "butterfly-book": "book-binding",
+  "menu-production": "menu",
+  "q-rod-hardcover": "book-binding",
+  "screw-contract": "book-binding",
+} as const satisfies Record<string, FormType>;
+
+export const fieldsByProduct: Record<FormType, readonly OrderField[]> = { "book-binding": book, menu, "certificate-folder": certificate, "construction-book": construction, unsure };
 export const commonFields: readonly OrderField[] = [
-  { id: "projectName", label: "製作名稱", type: "text", required: true }, { id: "quantity", label: "製作數量", type: "number", required: true }, { id: "wantedDate", label: "希望完成日期", type: "text", placeholder: "例如：2026/11/30", help: "此日期為希望時間，實際交期須由專人確認。" },
+  { id: "projectName", label: "製作名稱", type: "text", required: true }, { id: "quantity", label: "製作數量", type: "number", required: true }, { id: "wantedDate", label: "希望完成日期", type: "date", help: "此日期為希望時間，實際交期須由專人確認。" },
   { id: "budget", label: "製作預算（選填）", type: "text", help: "僅供需求了解，不作為估價依據。" }, { id: "fileStatus", label: "檔案準備狀態", type: "select", options: ["已有完整檔案", "有部分檔案", "尚未準備", "不確定需要哪些檔案"] }, { id: "special", label: "加工或特殊需求", type: "textarea" }, { id: "notes", label: "製作備註", type: "textarea" },
 ];

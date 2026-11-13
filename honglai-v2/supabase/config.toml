@@ -1,7 +1,7 @@
 project_id = "honglai-v2"
 
-[functions.submit-business-inquiry]
+[functions.submit-manual-inquiry]
 verify_jwt = false
 
-[functions.submit-sample-request]
+[functions.faq-assistant]
 verify_jwt = false

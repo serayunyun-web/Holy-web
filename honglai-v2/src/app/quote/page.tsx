@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { PageHero } from "@/components/page-hero";
+import Image from "next/image";
+import { QuoteCatalog } from "@/components/quote-catalog";
 
 export const metadata: Metadata = { title: "快速查價" };
 
 export default function QuotePage() {
-  return <main><PageHero eyebrow="Quick Quote" title="快速查價" description="新版價格將依公司確認的 Excel 規則建置，不沿用舊站價格。試算結果也不等於正式成交價格。" /><section className="section page-container"><div className="content-card"><h2>價格功能尚未啟用</h2><p>目前為第一階段視覺雛形。企業、大量與客製需求將維持人工詢價。</p><Link className="button button-secondary" href="/contact">先聯絡我們</Link></div></section></main>;
+  return <main>
+    <section className="inner-image-hero quote-image-hero">
+      <Image alt="精裝書冊、材質樣本、尺規與計算工具" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/quote/quote-banner-desktop.webp" />
+      <div className="inner-image-hero-shade" aria-hidden="true" />
+      <div className="page-container inner-image-hero-content">
+        <div className="inner-image-hero-copy">
+          <h1>選好規格，<span>查價更輕鬆。</span></h1>
+          <div className="image-page-hero-description"><p>依照產品類型、尺寸、材質與數量，快速了解參考價格。特殊需求也能交由專人協助估價。</p></div>
+        </div>
+      </div>
+    </section>
+    <QuoteCatalog />
+  </main>;
 }

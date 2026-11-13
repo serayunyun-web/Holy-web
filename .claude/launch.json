@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "honglai-static", "runtimeExecutable": "node", "runtimeArgs": ["scripts/preview-static.mjs"], "port": 4173, "cwd": "honglai-v2" }
+  ]
+}

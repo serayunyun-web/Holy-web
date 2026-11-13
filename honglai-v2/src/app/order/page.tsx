@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/page-hero";
+import Image from "next/image";
 import { OrderRequestForm } from "@/components/order-request-form";
 
 export const metadata: Metadata = { title: "線上下單" };
@@ -7,8 +7,19 @@ export const metadata: Metadata = { title: "線上下單" };
 export default function OrderPage() {
   return (
     <main>
-      <PageHero eyebrow="Order Request" title="填寫製作需求" description="送出後僅代表建立待確認需求；公司確認規格、檔案、交期與價格後，正式訂單才成立。" />
-      <section className="order-notice page-container"><strong>第一階段互動原型</strong><span>資料只暫存在這台裝置的瀏覽器，不會送出、不會上傳檔案，也不會建立正式訂單或顯示價格。</span></section>
+      <section className="inner-image-hero order-image-hero">
+        <Image alt="材質、紙張與裝訂規格靈感板" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/inquiry/inquiry-banner-desktop.webp" />
+        <div className="inner-image-hero-shade" aria-hidden="true" />
+        <div className="page-container inner-image-hero-content">
+          <div className="inner-image-hero-copy">
+            <h1>每一份獨特的需求，<span>都值得細心對待。</span></h1>
+            <div className="image-page-hero-description">
+              <p>從材質選擇、裝訂方式到特殊加工，歡迎與我們分享你的想法。由專人協助確認製作細節，提供合適的報價與建議。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="order-notice page-container"><strong>人工詢價 MVP</strong><span>草稿只保存在瀏覽器；點選正式送出並取得詢價編號後，才代表 staging 已收到資料。這不是正式報價、訂單或工作單。</span></section>
       <OrderRequestForm />
     </main>
   );

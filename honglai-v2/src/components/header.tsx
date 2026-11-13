@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { SocialLinks } from "@/components/social-links";
 import { navigation } from "@/data/site";
 
 export function Header() {
@@ -30,6 +31,7 @@ export function Header() {
           {navigation.map((item) => (
             <Link className={`nav-link${item.emphasis ? " nav-order" : ""}${isActive(item.href) ? " active" : ""}`} href={item.href} key={item.href}>{item.label}</Link>
           ))}
+          <SocialLinks className="header-social" />
         </nav>
         <button aria-expanded={isOpen} aria-label={isOpen ? "關閉選單" : "開啟選單"} className={`menu-button${isOpen ? " open" : ""}`} onClick={() => setIsOpen((current) => !current)} type="button"><span /></button>
       </div>
@@ -37,6 +39,7 @@ export function Header() {
         {navigation.map((item) => (
           <Link className={`nav-link${item.emphasis ? " nav-order" : ""}${isActive(item.href) ? " active" : ""}`} href={item.href} key={item.href} onClick={() => setIsOpen(false)}>{item.label}</Link>
         ))}
+        <SocialLinks className="mobile-social" />
       </nav>
     </header>
   );

@@ -1,6 +1,7 @@
 {
   "source": "鴻萊_FAQ_KNOWLEDGE_BASE_第二版.md",
-  "generatedAt": "2026-10-14",
+  "sourceSha256": "fc6b16ad24f2c6ce9ae7a695d0eed67f1dd2634cf199fb065add2b6fa46e2758",
+  "generatedAt": "2026-11-05",
   "categories": [
     {
       "id": "printing-estimates",
@@ -936,11 +937,19 @@
       "isActive": true
     }
   ],
+  "commonRules": [
+    "AI 小幫手不得直接提供價格、單價、總價、折扣、加價金額或價格區間。",
+    "遇到價格問題，引導客戶使用「線上下單／估價」頁面。",
+    "企業、大量、客製、資料不足，或一般品項達人工報價條件時，引導人工確認。",
+    "實際訂單的瑕疵、退換貨、補印、賠償、退款或發票個案，不由 AI 自行判定，需轉人工客服。",
+    "AI 只能使用本知識庫中已明確存在的資訊；資料不足時應說明需人工確認，不自行補充或推測。"
+  ],
   "aiPolicy": {
     "mayProvidePrices": false,
     "priceQuestionRoute": "/quote",
     "requiresHumanFor": [
       "企業、大量、客製或資料不足",
+      "一般品項達 40 本以上（證書夾依既有規則處理）",
       "實際訂單瑕疵與售後個案",
       "發票個案"
     ]

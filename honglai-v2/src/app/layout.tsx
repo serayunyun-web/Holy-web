@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { AiFaqAssistant } from "@/components/ai-faq-assistant";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { LendAPawCursor } from "@/components/lend-a-paw-cursor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,6 +17,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <a className="skip-link" href="#main-content">跳至主要內容</a>
         <Header />
         <div id="main-content">{children}</div>
+        <AiFaqAssistant />
+        <LendAPawCursor />
         <Footer />
       </body>
     </html>

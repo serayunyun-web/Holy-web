@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type ReactNode, useMemo, useState } from "react";
 import {
@@ -282,12 +283,13 @@ export function FaqBrowser() {
 
   return (
     <main className="faq-page">
-      <section className="faq-intro">
+      <section className="faq-intro faq-image-hero">
+        <Image alt="窗邊自然光、書冊與飛鳥意象" className="faq-intro-media" fill priority sizes="100vw" src="/images/faq/faq-banner-desktop.webp" />
+        <div className="faq-intro-shade" aria-hidden="true" />
         <div className="page-container faq-intro-inner">
           <div>
-            <p className="eyebrow">FAQ · 常見問題</p>
-            <h1>先找到問題，<span>再安心開始製作。</span></h1>
-            <p>依主題瀏覽印刷、檔案與後加工說明；個案規格、價格與售後判定仍由鴻萊人工確認。</p>
+            <h1>先找到答案，<span>再安心開始製作。</span></h1>
+            <p>從檔案準備、裝訂方式到製作流程，常見疑問都為你整理好了。輸入關鍵字，輕鬆找到需要的資訊。</p>
           </div>
           <label className="faq-search">
             <span className="faq-search-label">搜尋常見問題</span>

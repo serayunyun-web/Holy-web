@@ -10,7 +10,7 @@ export function adminClient() {
 export async function allowSubmission(
   client: ReturnType<typeof adminClient>,
   fingerprints: { ip: string; email: string },
-  formType: "business_inquiry" | "sample_request",
+  formType: "business_inquiry" | "sample_request" | "manual_inquiry",
 ) {
   const { data, error } = await client.rpc("claim_public_submission", {
     p_ip_fingerprint: fingerprints.ip,
@@ -22,7 +22,7 @@ export async function allowSubmission(
   return data === true;
 }
 
-export function publicNumber(prefix: "BI" | "SR") {
+export function publicNumber(prefix: "BI" | "SR" | "MI") {
   const date = new Date().toISOString().slice(0, 10).replaceAll("-", "");
   const random = crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase();
   return `${prefix}-${date}-${random}`;
