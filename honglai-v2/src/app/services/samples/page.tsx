@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "精裝皮革樣品", description: "�
 export default function SamplesPage() {
   return (
     <main>
-      <PageHero title="精裝皮革樣品" description="適用論文、合約書、菜單、證書夾等所有精裝產品。可依燙金方式與系列篩選，點一下色票即可放大查看紋理。" />
+      <PageHero title="精裝皮革樣品" description="適用論文、合約書、菜單、證書夾等所有精裝產品。可依燙金方式與系列篩選。" />
       <Suspense fallback={<p className="section page-container">載入樣品分類…</p>}><SampleBrowser /></Suspense>
     </main>
   );

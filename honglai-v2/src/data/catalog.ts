@@ -100,6 +100,14 @@ const productPhotoCount: Record<string, number> = {
   "hardcover": 3,
   "sewn-softcover": 3,
   "sewn-hardcover": 3,
+  "exposed-spine-sewn": 3,
+  "machine-sewn-binding": 3,
+  "traditional-thread-binding": 3,
+  "saddle-stitch": 3,
+  "ring-binding": 3,
+  "butterfly-book": 3,
+  "menu-production": 3,
+  "screw-contract": 3,
 };
 
 const photoPath = (slug: string, key: string) => `/images/products/${slug}-${key}.webp`;

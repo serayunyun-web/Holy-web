@@ -42,7 +42,7 @@ export default function Home() {
 
       <section className="home-section audience-section" aria-labelledby="audience-title">
         <div className="page-container">
-          <div className="section-heading audience-heading"><div><p className="eyebrow">Find Your Way</p><h2 id="audience-title">依你的需求快速開始</h2></div><p className="section-note">入口僅協助快速導覽，所有訪客都能自由瀏覽完整網站。</p></div>
+          <div className="section-heading audience-heading"><div><p className="eyebrow">Find Your Way</p><h2 id="audience-title">依你的需求快速開始</h2></div></div>
           <div className="audience-grid">
             <Link className="audience-card business-card" href="/business">
               <span className="audience-symbol" aria-hidden="true"><Image alt="" height={560} src="/images/home/audience-b2b.png" width={560} /></span>
@@ -58,7 +58,7 @@ export default function Home() {
 
       <section className="home-section news-section" aria-labelledby="news-title">
         <div className="page-container news-layout">
-          <div className="news-heading"><p className="eyebrow">News & Notices</p><h2 id="news-title">最新消息／公告</h2><p>目前尚無正式公告，以下內容為開發測試資料。</p></div>
+          <div className="news-heading"><p className="eyebrow">News & Notices</p><h2 id="news-title">最新消息／公告</h2></div>
           <div className="news-list">
             {homeNews.slice(0, 3).map((item) => (
               <article className="news-item" key={item.id}>

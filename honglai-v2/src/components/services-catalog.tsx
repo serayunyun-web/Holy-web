@@ -23,14 +23,13 @@ export function ServicesCatalog({ categories, products, allFilter }: ServicesCat
     <section className="services-catalog-section" aria-labelledby="catalog-title">
       <div className="page-container">
         <div className="category-toolbar" aria-label="產品分類篩選">
-          <p className="category-toolbar-note">可依用途切換分類；同一項產品可能同時適合多種需求。</p>
           <div className="category-filter-list" role="group" aria-label="選擇產品分類">
             <button aria-pressed={selectedCategoryId === allFilter.id} className="category-filter" onClick={() => setSelectedCategoryId(allFilter.id)} type="button">
-              <span aria-hidden="true">{allFilter.icon}</span><strong>{allFilter.name}</strong><small>{products.length} 項</small>
+              <strong>{allFilter.name}</strong><small>{products.length}</small>
             </button>
             {categories.map((category) => {
               const count = products.filter((product) => product.categoryIds.includes(category.id)).length;
-              return <button aria-pressed={selectedCategoryId === category.id} className="category-filter" key={category.id} onClick={() => setSelectedCategoryId(category.id)} type="button"><span aria-hidden="true">{category.icon}</span><strong>{category.name}</strong><small>{count} 項</small></button>;
+              return <button aria-pressed={selectedCategoryId === category.id} className="category-filter" key={category.id} onClick={() => setSelectedCategoryId(category.id)} type="button"><strong>{category.name}</strong><small>{count}</small></button>;
             })}
           </div>
         </div>

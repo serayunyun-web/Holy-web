@@ -1,6 +1,10 @@
 import { hasValidPublishableKey } from "../_shared/auth.ts";
+import { ATTACHMENT_BUCKET, MAX_ATTACHMENTS, attachmentPath, attachmentProblem } from "../_shared/attachment-rules.ts";
 import { adminClient, allowSubmission, publicNumber } from "../_shared/database.ts";
+import { sendEmail, trialQuoteEmail } from "../_shared/email.ts";
 import { allowedOrigin, corsHeaders, response } from "../_shared/http.ts";
+import { ESTIMATE_DISCLAIMER, calculateEstimate, isAutoPriced, shippingChoices, visiblePricingFields } from "../_shared/pricing.ts";
+import { allowedManualSpecKeys, specRows } from "../_shared/spec-labels.ts";
 import { email, isoDate, phone, positiveInteger, submissionFingerprints, text, uuid, type JsonObject } from "../_shared/validation.ts";
 
 const products = {
@@ -23,35 +27,68 @@ const products = {
 } as const;
 
 const customerTypes = new Set(["個人", "公司行號", "學校或行政單位"]);
-const preferredContacts = new Set(["電話", "Email", "LINE"]);
-const deliveryMethods = new Set(["自取", "需要配送", "尚未確定"]);
-const specificationKeys = new Set([
-  "purpose", "binding", "size", "orientation", "pages", "thickness", "insidePrint", "printSides",
-  "cover", "coverSample", "turning", "coverFinish", "thesisBound", "foilText", "mounting", "screw",
-  "corner", "coverFilm", "saddleCover", "menuType", "openSize", "print", "material", "accessory",
-  "lamination", "design", "style", "opening", "fixing", "lining", "finish", "constructionType",
-  "sourceSize", "finishSize", "sheets", "constructionCover", "folding", "item", "occasion", "approxSize",
-  "reference", "appearance", "help", "projectName", "budget",
-]);
+const commonSpecKeys = new Set(["coverColor", "foilContent", "projectName", "coverSampleChoice"]);
 
-function optionalChoice(body: JsonObject, key: string, allowed: Set<string>) {
-  const value = text(body, key, 80);
-  if (value && !allowed.has(value)) throw new Error(`invalid:${key}`);
-  return value;
-}
-
-function specifications(body: JsonObject) {
+/** 只保留此產品實際顯示的規格欄位，並檢查自動計價欄位完整合法。 */
+function specifications(body: JsonObject, productSlug: string) {
   const input = body.specifications;
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new Error("invalid:specifications");
-  const result: Record<string, string> = {};
-  for (const [key, raw] of Object.entries(input)) {
-    if (!specificationKeys.has(key) || typeof raw !== "string") throw new Error("invalid:specifications");
-    const value = raw.trim();
-    if (value.length > 2000) throw new Error("invalid:specifications");
-    if (value) result[key] = value;
+  const raw: Record<string, string> = {};
+  for (const [key, value] of Object.entries(input)) {
+    if (typeof value !== "string") throw new Error("invalid:specifications");
+    if (value.trim().length > 2000) throw new Error("invalid:specifications");
+    if (value.trim()) raw[key] = value.trim();
   }
-  if (!result.projectName) throw new Error("invalid:specifications");
-  return result;
+  const auto = isAutoPriced(productSlug);
+  const pricingIds = new Set(visiblePricingFields(productSlug, raw).map((field) => field.id));
+  return Object.fromEntries(Object.entries(raw).filter(([key]) => commonSpecKeys.has(key) || (auto ? pricingIds.has(key) : allowedManualSpecKeys.has(key))));
+}
+
+type Attachment = { path: string; name: string; size: number; type: string };
+
+function attachmentList(body: JsonObject, idempotencyKey: string): Attachment[] {
+  const input = body.attachments ?? [];
+  if (!Array.isArray(input) || input.length > MAX_ATTACHMENTS) throw new Error("invalid:attachments");
+  return input.map((item, index) => {
+    const entry = item as JsonObject;
+    const name = text(entry, "name", 255, true)!;
+    const size = Number(entry.size);
+    if (attachmentProblem({ name, size }) || entry.path !== attachmentPath(idempotencyKey, index, name)) throw new Error("invalid:attachments");
+    return { path: entry.path as string, name, size, type: text(entry, "type", 120) ?? "" };
+  });
+}
+
+async function prepareUploads(request: Request, origin: string, body: JsonObject) {
+  const idempotencyKey = uuid(body, "idempotencyKey");
+  const emailValue = email(body, "email");
+  const files = body.files;
+  if (!Array.isArray(files) || files.length < 1 || files.length > MAX_ATTACHMENTS) throw new Error("invalid:files");
+  const checked = files.map((item) => {
+    const entry = item as JsonObject;
+    const name = text(entry, "name", 255, true)!;
+    if (attachmentProblem({ name, size: Number(entry.size) })) throw new Error("invalid:files");
+    return name;
+  });
+  const client = adminClient();
+  if (!await allowSubmission(client, await submissionFingerprints(request, emailValue), "manual_inquiry_upload")) {
+    return response(origin, 429, { error: "rate_limited" });
+  }
+  const uploads = [];
+  for (const [index, name] of checked.entries()) {
+    const path = attachmentPath(idempotencyKey, index, name);
+    const { data, error } = await client.storage.from(ATTACHMENT_BUCKET).createSignedUploadUrl(path, { upsert: true });
+    if (error || !data) throw error ?? new Error("upload_url_failed");
+    uploads.push({ path, token: data.token });
+  }
+  return response(origin, 200, { uploads });
+}
+
+async function verifyUploaded(client: ReturnType<typeof adminClient>, idempotencyKey: string, attachments: Attachment[]) {
+  if (!attachments.length) return;
+  const { data, error } = await client.storage.from(ATTACHMENT_BUCKET).list(`pending/${idempotencyKey}`, { limit: 100 });
+  if (error) throw error;
+  const sizes = new Map((data ?? []).map((object) => [`pending/${idempotencyKey}/${object.name}`, Number(object.metadata?.size ?? -1)]));
+  for (const file of attachments) if (sizes.get(file.path) !== file.size) throw new Error("invalid:attachments");
 }
 
 Deno.serve(async (request) => {
@@ -63,8 +100,10 @@ Deno.serve(async (request) => {
   try {
     if (!await hasValidPublishableKey(request)) return response(origin, 401, { error: "invalid_api_key" });
     const length = Number(request.headers.get("content-length") ?? 0);
-    if (length > 32_768) return response(origin, 413, { error: "payload_too_large" });
+    if (length > 65_536) return response(origin, 413, { error: "payload_too_large" });
     const body = await request.json() as JsonObject;
+    if (body.action === "prepare-uploads") return await prepareUploads(request, origin, body);
+
     const emailValue = email(body, "email");
     const productSlug = text(body, "productSlug", 80, true)!;
     const product = products[productSlug as keyof typeof products];
@@ -74,47 +113,56 @@ Deno.serve(async (request) => {
     if (body.privacyConsent !== true) throw new Error("invalid:privacyConsent");
     const organization = text(body, "organization", 120);
     if (customerType !== "個人" && !organization) throw new Error("invalid:organization");
-    const deliveryMethod = optionalChoice(body, "deliveryMethod", deliveryMethods);
-    const deliveryAddress = text(body, "deliveryAddress", 500);
-    if (deliveryMethod === "需要配送" && !deliveryAddress) throw new Error("invalid:deliveryAddress");
     const quantity = positiveInteger(body, "quantity");
-    if (!quantity) throw new Error("invalid:quantity");
+    if (!quantity || quantity > 100_000) throw new Error("invalid:quantity");
+
+    const shippingChoice = shippingChoices.find((choice) => choice.id === body.shippingId);
+    if (!shippingChoice) throw new Error("invalid:shippingId");
+    const district = text(body, "shippingDistrict", 20) ?? undefined;
+    const deliveryAddress = text(body, "deliveryAddress", 500);
+    if (shippingChoice.needsAddress && !deliveryAddress) throw new Error("invalid:deliveryAddress");
 
     const idempotencyKey = uuid(body, "idempotencyKey");
+    const specs = specifications(body, productSlug);
+    const attachments = attachmentList(body, idempotencyKey);
+
+    // 後端重新計價：不採用瀏覽器傳來的任何金額。
+    const estimate = calculateEstimate({ productSlug, quantity, values: specs, shippingId: shippingChoice.id, district });
+    if (estimate.status === "incomplete") throw new Error("invalid:specifications");
+    if (shippingChoice.needsDistrict && !estimate.shipping) throw new Error("invalid:shippingDistrict");
+
     const client = adminClient();
     const previous = await client.from("manual_inquiries").select("inquiry_no").eq("idempotency_key", idempotencyKey).maybeSingle();
     if (previous.error) throw previous.error;
-    if (previous.data) return response(origin, 200, { referenceNo: previous.data.inquiry_no, duplicate: true });
+    if (previous.data) return response(origin, 200, { referenceNo: previous.data.inquiry_no, duplicate: true, emailSent: false, estimate });
     if (!await allowSubmission(client, await submissionFingerprints(request, emailValue), "manual_inquiry")) {
       return response(origin, 429, { error: "rate_limited" });
     }
+    await verifyUploaded(client, idempotencyKey, attachments);
 
-    const { data, error } = await client.rpc("create_manual_inquiry", {
-      p_inquiry_no: publicNumber("MI"),
-      p_idempotency_key: idempotencyKey,
-      p_customer_type: customerType,
-      p_contact_name: text(body, "contactName", 80, true),
-      p_phone: phone(body, "phone"),
-      p_email: emailValue,
-      p_organization: organization,
-      p_preferred_contact: optionalChoice(body, "preferredContact", preferredContacts),
-      p_line_id: text(body, "lineId", 80),
-      p_delivery_method: deliveryMethod,
-      p_delivery_address: deliveryAddress,
-      p_expected_date: isoDate(body, "expectedDate"),
-      p_file_status: text(body, "fileStatus", 80),
-      p_special_requirements: text(body, "specialRequirements", 2000),
-      p_customer_notes: text(body, "customerNotes", 2000),
-      p_contact_notes: text(body, "contactNotes", 2000),
-      p_product_id: product[0],
-      p_product_slug: productSlug,
-      p_product_name: product[1],
-      p_form_type: product[2],
-      p_quantity: quantity,
-      p_specifications: specifications(body),
+    const contactName = text(body, "contactName", 80, true)!;
+    const { data: referenceNo, error } = await client.rpc("create_manual_inquiry_v2", {
+      p_inquiry: {
+        inquiry_no: publicNumber("MI"), idempotency_key: idempotencyKey, customer_type: customerType,
+        contact_name: contactName, phone: phone(body, "phone"), email: emailValue, organization,
+        preferred_contact: "Email", line_id: text(body, "lineId", 80),
+        delivery_method: shippingChoice.label, delivery_address: deliveryAddress,
+        expected_date: isoDate(body, "expectedDate"), customer_notes: text(body, "customerNotes", 2000),
+        estimate, estimate_total: estimate.status === "priced" ? estimate.total : null, price_version: estimate.priceVersion,
+        shipping: estimate.shipping,
+      },
+      p_item: { product_id: product[0], product_slug: productSlug, product_name: product[1], form_type: product[2], quantity, specifications: specs },
+      p_attachments: attachments,
     });
     if (error) throw error;
-    return response(origin, 201, { referenceNo: data });
+
+    const emailSent = await sendEmail({
+      to: emailValue,
+      subject: `【鴻萊興業】${estimate.status === "priced" ? "系統試算報價單" : "已收到您的製作需求"}（${referenceNo}）`,
+      html: trialQuoteEmail({ referenceNo, contactName, productName: product[1], quantity, specs: specRows(productSlug, specs), estimate, disclaimer: ESTIMATE_DISCLAIMER }),
+    });
+    if (emailSent) await client.from("manual_inquiries").update({ trial_email_sent_at: new Date().toISOString() }).eq("inquiry_no", referenceNo);
+    return response(origin, 201, { referenceNo, emailSent, estimate });
   } catch (error) {
     const invalid = error instanceof Error && error.message.startsWith("invalid:");
     console.error("submit-manual-inquiry", error);

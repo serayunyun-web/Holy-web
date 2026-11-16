@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Noto_Sans_TC, Outfit } from "next/font/google";
 import { AiFaqAssistant } from "@/components/ai-faq-assistant";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { LendAPawCursor } from "@/components/lend-a-paw-cursor";
 import "./globals.css";
+
+const notoSansTC = Noto_Sans_TC({ weight: "variable", display: "swap", preload: false, variable: "--font-noto-sans-tc" });
+const outfit = Outfit({ weight: "variable", subsets: ["latin"], display: "swap", variable: "--font-outfit" });
 
 export const metadata: Metadata = {
   title: { default: "鴻萊興業｜專業裝訂與印製服務", template: "%s｜鴻萊興業" },
@@ -12,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html data-scroll-behavior="smooth" lang="zh-Hant">
+    <html className={`${notoSansTC.variable} ${outfit.variable}`} data-scroll-behavior="smooth" lang="zh-Hant">
       <body>
         <a className="skip-link" href="#main-content">跳至主要內容</a>
         <Header />

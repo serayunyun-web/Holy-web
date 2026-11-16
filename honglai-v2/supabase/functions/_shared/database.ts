@@ -10,7 +10,7 @@ export function adminClient() {
 export async function allowSubmission(
   client: ReturnType<typeof adminClient>,
   fingerprints: { ip: string; email: string },
-  formType: "business_inquiry" | "sample_request" | "manual_inquiry",
+  formType: "business_inquiry" | "sample_request" | "manual_inquiry" | "manual_inquiry_upload",
 ) {
   const { data, error } = await client.rpc("claim_public_submission", {
     p_ip_fingerprint: fingerprints.ip,

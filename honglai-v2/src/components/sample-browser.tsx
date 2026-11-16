@@ -100,7 +100,7 @@ export function SampleBrowser() {
             </div>
           </section>
         ))}
-      </> : corners.length === 0 && <div className="sample-note"><strong>護角樣品資料待補</strong><p>鴻萊尚未提供護角的正式照片與編號，資料加入後會顯示在這裡。</p></div>}
+      </> : corners.length === 0 && <div className="sample-note"><strong>護角樣品請洽專人提供</strong></div>}
 
       <div className="sample-footer">
         <p>圖片可能因螢幕顯色產生差異，實際顏色與紋理以實體樣本為準。若有特殊材質、顏色或設計需求，建議先進行測試。</p>
