@@ -36,9 +36,10 @@ jobs:
         env:
           # <帳號>.github.io 這種個人站放在網域根目錄，不用前綴；其他 repo 的網址是 /<repo>/，要加前綴
           NEXT_PUBLIC_BASE_PATH: ${{ !endsWith(github.event.repository.name, '.github.io') && format('/{0}', github.event.repository.name) || '' }}
-          # 在 repo 的 Settings → Secrets and variables → Actions → Variables 設定（公開金鑰，可放前端）
-          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          # Supabase 公開設定：publishable key 本來就會出現在前端程式中，可以公開（絕對不要放 secret key）。
+          # 若在 repo Variables 設了同名變數，會優先使用 Variables。
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://ortxroasrfomdmfctkmm.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_gYrr_78DuEJgqo1ztvnnvQ_-kzBriCV' }}
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
