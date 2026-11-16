@@ -6,7 +6,7 @@ import { activeCategories, orderableProducts } from "@/data/catalog";
 import { calculateEstimate } from "@/lib/pricing";
 import { handOffQuote } from "@/lib/order-draft";
 import { ProductPicker } from "@/components/product-picker";
-import { PriceBreakdown, ShippingPicker, SpecFields, specSummary } from "@/components/spec-fields";
+import { ModeSwitch, PriceBreakdown, ShippingPicker, SpecFields, specSummary } from "@/components/spec-fields";
 
 type Values = Record<string, string>;
 
@@ -27,7 +27,7 @@ export function QuoteCatalog() {
   const summary = product ? specSummary(product.slug, values) : [];
 
   const chooseProduct = (slug: string) => {
-    if (slug !== productSlug) { setValues({}); setQuantity("1"); }
+    if (slug !== productSlug) { setValues((current): Values => (current.mode ? { mode: current.mode } : {})); setQuantity("1"); }
     setProductSlug(slug);
     window.setTimeout(() => specificationRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
@@ -41,7 +41,8 @@ export function QuoteCatalog() {
   return <div className="quote-catalog-shell">
     <section className="quote-intro page-container">
       <div><p className="eyebrow">PRODUCT DIRECTORY</p><h2>做多少、花多少，<br />先算給你看</h2></div>
-      <p>論文、膠裝、精裝等常見品項可直接線上試算；特殊材質或客製需求，由專人估價後以 Email 回覆。</p>
+      <div className="quote-intro-side"><p>所有品項都能直接線上試算。不熟悉印刷規格就選「一般客戶」；需要指定紙種、內頁張數或混合印刷，請切換到「設計師」。</p>
+        <ModeSwitch onChange={(mode) => setValues((current) => ({ ...current, mode }))} values={values} /></div>
     </section>
 
     <section className="quote-directory page-container" aria-labelledby="quote-products-heading">

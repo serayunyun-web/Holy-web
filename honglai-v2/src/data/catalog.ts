@@ -129,7 +129,7 @@ export const products: readonly Product[] = [
     id: "prd-thesis-binding", slug: "thesis-binding", title: "論文",
     description: "依學校規範製作平裝或精裝論文，可燙印校名、題目與姓名。",
     categoryIds: ["cat-books"], cardImage: cardImageFor("thesis-binding"), gallery: gallery("thesis-binding", "論文", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["平裝｜膠裝", "精裝｜硬殼封面・方背", "加工｜燙金"],
       ["碩博士畢業論文、學位論文、研究報告"],
@@ -146,7 +146,7 @@ export const products: readonly Product[] = [
     id: "prd-certificate-folder", slug: "certificate-folder", title: "證書夾",
     description: "紙面或皮面證書夾，可燙印校徽、Logo 與文字。",
     categoryIds: ["cat-business", "cat-creative"], cardImage: cardImageFor("certificate-folder"), gallery: gallery("certificate-folder", "證書夾", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["樣式｜兩片式、泡棉兩片式、三角式、磁扣翻蓋式", "開啟｜左右翻、上下翻", "固定｜四角、緞帶或內袋"],
       ["畢業證書、聘書、獎狀、感謝狀、結婚書約"],
@@ -163,7 +163,7 @@ export const products: readonly Product[] = [
     id: "prd-construction-book", slug: "construction-book", title: "工程施工本",
     description: "大型工程圖摺疊成冊，方便帶到現場翻閱。",
     categoryIds: ["cat-business"], cardImage: cardImageFor("construction-book"), gallery: gallery("construction-book", "工程施工本", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["圖面｜A1、A2、A3 工程圖摺疊成冊", "封面｜施工本專用皮、厚軟皮、透明膠片", "裝訂｜膠裝、螺絲裝、打孔裝冊"],
       ["建築施工圖冊、土木工程圖、施工資料本"],
@@ -180,7 +180,7 @@ export const products: readonly Product[] = [
     id: "prd-engineering-contract", slug: "engineering-contract", title: "工程合約書",
     description: "合約本文與附件依序裝訂成冊，頁面固定、方便蓋騎縫章。",
     categoryIds: ["cat-business"], cardImage: cardImageFor("engineering-contract"), gallery: gallery("engineering-contract", "工程合約書", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "5-2" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "5-2" }],
     details: bindingDetails(
       ["裝訂｜膠裝、平裝、精裝", "內容｜合約本文與附件依序裝訂成冊", "加工｜封面燙金"],
       ["工程合約、投標文件、價格分析表、工程圖說附件"],
@@ -198,7 +198,7 @@ export const products: readonly Product[] = [
     id: "prd-perfect-binding", slug: "perfect-binding", title: "膠裝",
     description: "用膠將內頁黏合於書背，最常見也最經濟的書冊裝訂方式。",
     categoryIds: ["cat-books", "cat-creative"], cardImage: cardImageFor("perfect-binding"), gallery: gallery("perfect-binding", "膠裝", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "7-1、7-2" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "7-1、7-2" }],
     details: bindingDetails(
       ["內頁｜書背上膠黏合", "封面｜軟質封面包覆", "書背｜平整，可印書名"],
       ["報告、講義、型錄、一般書冊"],
@@ -216,7 +216,7 @@ export const products: readonly Product[] = [
     id: "prd-hardcover", slug: "hardcover", title: "精裝",
     description: "硬紙板為底、包上封面材料的方背精裝，耐用又有份量。",
     categoryIds: ["cat-books", "cat-creative"], cardImage: cardImageFor("hardcover"), gallery: gallery("hardcover", "精裝", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["封面｜硬紙板包覆封面材料", "書背｜方背"],
       ["論文、紀念冊、收藏書、正式文件"],
@@ -233,7 +233,7 @@ export const products: readonly Product[] = [
     id: "prd-sewn-softcover", slug: "sewn-softcover", title: "線平裝",
     description: "內頁先穿線再上膠包封，比膠裝更耐翻、不易掉頁。",
     categoryIds: ["cat-books", "cat-creative", "cat-finishing"], cardImage: cardImageFor("sewn-softcover"), gallery: gallery("sewn-softcover", "線平裝", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["內頁｜先穿線再上膠", "封面｜軟質封面"],
       ["教材、手冊、經常翻閱的書冊"],
@@ -249,7 +249,7 @@ export const products: readonly Product[] = [
     id: "prd-sewn-hardcover", slug: "sewn-hardcover", title: "線精裝",
     description: "穿線書芯搭配精裝硬殼，牢固與質感一次到位。",
     categoryIds: ["cat-books", "cat-creative", "cat-finishing"], cardImage: cardImageFor("sewn-hardcover"), gallery: gallery("sewn-hardcover", "線精裝", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["書芯｜穿線", "封面｜精裝硬殼・方背"],
       ["厚書、畫冊、典藏用書"],
@@ -265,7 +265,7 @@ export const products: readonly Product[] = [
     id: "prd-exposed-spine-sewn", slug: "exposed-spine-sewn", title: "裸背線裝",
     description: "書背不包封、縫線外露，翻開可 180° 完全攤平。",
     categoryIds: ["cat-books", "cat-creative", "cat-finishing"], cardImage: cardImageFor("exposed-spine-sewn"), gallery: gallery("exposed-spine-sewn", "裸背線裝", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["書背｜不包覆，縫線外露", "開合｜可 180° 攤平"],
       ["筆記本、手帳、作品集、食譜"],
@@ -282,7 +282,7 @@ export const products: readonly Product[] = [
     id: "prd-machine-sewn-binding", slug: "machine-sewn-binding", title: "車線平裝",
     description: "沿書脊車縫一道線固定內頁，輕薄簡潔，線跡也是設計。",
     categoryIds: ["cat-books", "cat-creative", "cat-finishing"], cardImage: cardImageFor("machine-sewn-binding"), gallery: gallery("machine-sewn-binding", "車線平裝", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "9-2" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "9-2" }],
     details: bindingDetails(
       ["固定｜沿書脊車縫一道線", "頁數｜中縫裝訂需為 4 的倍數"],
       ["薄本手冊、小誌、邀請卡冊、設計刊物"],
@@ -299,7 +299,7 @@ export const products: readonly Product[] = [
     id: "prd-traditional-thread-binding", slug: "traditional-thread-binding", title: "古書裝訂",
     description: "傳統四眼、六眼線裝與經摺裝，適合族譜、詩集與經文。",
     categoryIds: ["cat-books", "cat-creative", "cat-finishing"], cardImage: cardImageFor("traditional-thread-binding"), gallery: gallery("traditional-thread-binding", "古書裝訂", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["線裝｜書頁對摺疊齊，書脊側打孔穿線", "四眼裝｜一般尺寸", "六眼裝｜大尺寸或厚本，上下角各多打一孔", "經摺裝｜長幅紙張正反摺疊，前後加硬封面"],
       ["族譜、詩集、字帖、經文、紀念文集"],
@@ -311,13 +311,13 @@ export const products: readonly Product[] = [
         "經摺裝則把長幅紙張\n像風琴一樣一正一反摺疊\n前後再加上硬封面\n攤開能一路連續閱讀，收起來又整齊方正",
       ],
     ),
-    tone: "teal", displayOrder: 110, isActive: true, isPlaceholder: false, quoteMode: "manual", isOrderable: false,
+    tone: "teal", displayOrder: 110, isActive: true, isPlaceholder: false,
   },
   {
     id: "prd-saddle-stitch", slug: "saddle-stitch", title: "騎馬釘",
     description: "紙張對摺後於書脊打釘，輕薄、快速，翻開可完全攤平。",
     categoryIds: ["cat-business", "cat-creative", "cat-finishing"], cardImage: cardImageFor("saddle-stitch"), gallery: gallery("saddle-stitch", "騎馬釘", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["裝訂｜紙張對摺，書脊打釘", "頁數｜需為 4 的倍數"],
       ["型錄、簡介、活動手冊、刊物"],
@@ -333,7 +333,7 @@ export const products: readonly Product[] = [
     id: "prd-ring-binding", slug: "ring-binding", title: "線圈環裝",
     description: "打孔穿入線圈，可 360° 翻轉，也能完全攤平。",
     categoryIds: ["cat-books", "cat-business", "cat-finishing"], cardImage: cardImageFor("ring-binding"), gallery: gallery("ring-binding", "線圈環裝", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "P13" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "P13" }],
     details: bindingDetails(
       ["裝訂｜打孔後穿入線圈", "開合｜可 360° 翻轉"],
       ["筆記本、桌曆、手冊、邊看邊寫的文件"],
@@ -351,7 +351,7 @@ export const products: readonly Product[] = [
     id: "prd-butterfly-book", slug: "butterfly-book", title: "蝴蝶平、精裝",
     description: "每頁對摺裱貼，跨頁無接縫、可完全攤平，適合作品集與相片書。",
     categoryIds: ["cat-books", "cat-creative"], cardImage: cardImageFor("butterfly-book"), gallery: gallery("butterfly-book", "蝴蝶平、精裝", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "10-1、10-2、10-x" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "10-1、10-2、10-x" }],
     details: bindingDetails(
       ["內頁｜每頁對摺裱貼", "跨頁｜無接縫", "開合｜可完全攤平"],
       ["作品集、攝影集、相片書、紀念冊"],
@@ -369,7 +369,7 @@ export const products: readonly Product[] = [
     id: "prd-menu-production", slug: "menu-production", title: "菜單螺絲裝",
     description: "螺絲固定式菜單，換季調價只要抽換單頁，不必整本重印。",
     categoryIds: ["cat-business", "cat-creative"], cardImage: cardImageFor("menu-production"), gallery: gallery("menu-production", "菜單螺絲裝", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       [...screwStructure, "加工｜可搭配護貝內頁與護角"],
       ["餐廳、咖啡廳、飲料店菜單"],
@@ -385,7 +385,7 @@ export const products: readonly Product[] = [
     id: "prd-q-rod-hardcover", slug: "q-rod-hardcover", title: "Q桿精裝",
     description: "精裝硬殼搭配 Q 桿書背，內頁免打孔、可隨時抽換。",
     categoryIds: ["cat-business", "cat-finishing"], cardImage: cardImageFor("q-rod-hardcover"), gallery: gallery("q-rod-hardcover", "Q桿精裝", "brown"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價格與交期", value: "提交需求後由專人確認" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "交期", value: "下單後由專人確認" }],
     details: bindingDetails(
       ["封面｜精裝硬殼", "書背｜換成 Q 桿夾條", "內頁｜免打孔"],
       ["提案本、報價資料、需要持續更新的文件"],
@@ -401,7 +401,7 @@ export const products: readonly Product[] = [
     id: "prd-screw-contract", slug: "screw-contract", title: "鎖螺絲合約書",
     description: "以對鎖螺絲固定成冊，結構穩固，內頁可拆裝增減。",
     categoryIds: ["cat-business", "cat-finishing"], cardImage: cardImageFor("screw-contract"), gallery: gallery("screw-contract", "鎖螺絲合約書", "teal"),
-    basicInfo: [{ label: "估價方式", value: "需人工詢價" }, { label: "價目表來源", value: "11-1、11-2、附表11" }],
+    basicInfo: [{ label: "估價方式", value: "線上即時試算" }, { label: "價目表來源", value: "11-1、11-2、附表11" }],
     details: bindingDetails(
       screwStructure,
       ["合約書、樣品冊、色卡、作品集"],

@@ -1552,3 +1552,37 @@ h3 { font-weight: 800; }
   .contact-cta-actions { width: 100%; }.contact-cta-actions .button { flex: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .contact-action { transition: none; }.contact-action:hover { transform: none; } }
+
+/* ---------- 一般客戶／設計師模式切換 ---------- */
+.quote-intro-side { display: grid; gap: 1.1rem; }
+.quote-intro-side > p { margin: 0; color: var(--muted); }
+.mode-switch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-bottom: 1.2rem; }
+.mode-switch button { display: grid; gap: .2rem; border: 1px solid #d5ded9; border-radius: 18px 6px; background: rgb(240 238 233 / 70%); color: var(--ink); padding: .85rem 1rem; text-align: left; cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
+.mode-switch button:hover { border-color: var(--teal); }
+.mode-switch button[aria-pressed="true"] { border: 2px solid var(--teal-deep); background: var(--teal-soft); color: var(--teal-deep); }
+.mode-switch strong { font-weight: 800; }
+.mode-switch small { color: var(--muted); font-size: .75rem; }
+@media (max-width: 560px) { .mode-switch { grid-template-columns: 1fr; } }
+
+/* ---------- 模擬 LINE Pay 結帳 ---------- */
+.mock-pay-shell { max-width: 560px; padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.mock-pay-demo { margin: 0 0 1rem; border: 1px dashed #c9a227; border-radius: 10px; background: #fff8df; color: #6b5310; padding: .7rem 1rem; font-size: .85rem; font-weight: 700; text-align: center; }
+.mock-pay-card { overflow: hidden; border: 1px solid #d5ded9; border-radius: 18px; background: var(--white); box-shadow: 0 18px 40px rgb(43 90 80 / 10%); }
+.mock-pay-header { display: flex; gap: .8rem; align-items: center; background: #2f9e5b; color: #fff; padding: 1rem 1.3rem; }
+.mock-pay-header div { display: grid; }
+.mock-pay-header small { opacity: .85; font-size: .78rem; }
+.mock-pay-mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgb(255 255 255 / 18%); font-weight: 900; font-size: .9rem; }
+.mock-pay-body { display: grid; gap: 1rem; padding: 1.4rem 1.3rem 1.6rem; }
+.mock-pay-body h1 { margin: 0; font-size: 1.4rem; }
+.mock-pay-body p { margin: 0; color: var(--muted); }
+.mock-pay-summary { display: grid; gap: .55rem; margin: 0; }
+.mock-pay-summary div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #edf1ef; padding-bottom: .55rem; }
+.mock-pay-summary dt { color: var(--muted); }
+.mock-pay-summary dd { margin: 0; font-weight: 700; text-align: right; }
+.mock-pay-amount dd { color: #2f9e5b; font-size: 1.5rem; font-weight: 900; }
+.mock-pay-hint { font-size: .85rem; }
+.mock-pay-actions { display: grid; gap: .6rem; }
+.mock-pay-actions .button { width: 100%; justify-content: center; }
+.mock-pay-result { justify-items: center; text-align: center; }
+.mock-pay-icon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: #2f9e5b; color: #fff; font-size: 1.8rem; font-weight: 900; }
+.mock-pay-result.is-failed .mock-pay-icon, .mock-pay-result.is-cancelled .mock-pay-icon { background: #c0563f; }

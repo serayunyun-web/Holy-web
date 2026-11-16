@@ -24,10 +24,11 @@ const products = {
   "menu-production": ["prd-menu-production", "菜單螺絲裝", "menu"],
   "q-rod-hardcover": ["prd-q-rod-hardcover", "Q桿精裝", "book-binding"],
   "screw-contract": ["prd-screw-contract", "鎖螺絲合約書", "book-binding"],
+  "traditional-thread-binding": ["prd-traditional-thread-binding", "古書裝訂", "book-binding"],
 } as const;
 
 const customerTypes = new Set(["個人", "公司行號", "學校或行政單位"]);
-const commonSpecKeys = new Set(["coverColor", "foilContent", "projectName", "coverSampleChoice"]);
+const commonSpecKeys = new Set(["mode", "coverColor", "foilContent", "projectName", "coverSampleChoice"]);
 
 /** 只保留此產品實際顯示的規格欄位，並檢查自動計價欄位完整合法。 */
 function specifications(body: JsonObject, productSlug: string) {

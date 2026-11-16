@@ -4,7 +4,7 @@ import { pricingFields } from "./pricing.ts";
 const manualLabels: Record<string, string> = {
   purpose: "用途", size: "成品尺寸", orientation: "成品方向", pages: "內頁頁數", insidePrint: "內頁印刷", printSides: "印刷面",
   cover: "封面材質", coverSample: "皮面／膠皮", turning: "翻閱方向", coverFinish: "封面加工", coverFilm: "封面膠片",
-  coverColor: "封面顏色／樣品編號", foilContent: "燙金內容", projectName: "製作名稱", coverSampleChoice: "選擇的樣品",
+  coverColor: "封面顏色／樣品編號", foilContent: "燙金內容", projectName: "製作名稱", coverSampleChoice: "選擇的樣品", mode: "填寫模式",
 };
 
 /** 依填寫順序回傳 [欄位名稱, 值]。 */

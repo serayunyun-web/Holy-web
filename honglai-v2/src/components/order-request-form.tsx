@@ -8,9 +8,10 @@ import { validateEmail, validatePhone } from "@/lib/form-validation";
 import { ATTACHMENT_ACCEPT, MAX_ATTACHMENTS, attachmentProblem, formatBytes } from "@/lib/attachments";
 import { calculateEstimate, invalidPricingFields, isAutoPriced, shippingChoices } from "@/lib/pricing";
 import { blankDraft, readDraft, writeDraft, DRAFT_KEY, type Draft } from "@/lib/order-draft";
+import { saveCheckout } from "@/lib/checkout";
 import { SubmissionError, callPublicFunction, supabaseBrowser } from "@/lib/supabase-public-api";
 import { ProductPicker } from "@/components/product-picker";
-import { CommonInput, PriceBreakdown, ShippingPicker, SpecFields, specSummary, visibleManualFields } from "@/components/spec-fields";
+import { CommonInput, ModeSwitch, PriceBreakdown, ShippingPicker, SpecFields, specSummary, visibleManualFields } from "@/components/spec-fields";
 
 type PickedFile = { file: File; status: "ready" | "uploading" | "done" | "failed"; error?: string };
 type SubmitResult = { referenceNo: string; emailSent: boolean; priced: boolean };
@@ -59,7 +60,7 @@ export function OrderRequestForm() {
 
   const chooseProduct = (slug: string) => {
     if (slug === draft.productSlug) return;
-    setDraft((current) => ({ ...current, productSlug: slug, values: { quantity: current.values.quantity || "1" }, samples: {}, idempotencyKey: crypto.randomUUID() }));
+    setDraft((current) => ({ ...current, productSlug: slug, values: { quantity: current.values.quantity || "1", ...(current.values.mode ? { mode: current.values.mode } : {}) }, samples: {}, idempotencyKey: crypto.randomUUID() }));
     setMessage("");
     window.setTimeout(() => specRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
@@ -123,7 +124,7 @@ export function OrderRequestForm() {
       }
       const { wantedDate, notes } = draft.values;
       const specifications = Object.fromEntries(Object.entries(draft.values).filter(([key, value]) => value && !["quantity", "wantedDate", "notes"].includes(key)));
-      const response = await callPublicFunction<{ referenceNo: string; emailSent: boolean; estimate: { status: string } }>("submit-manual-inquiry", {
+      const response = await callPublicFunction<{ referenceNo: string; emailSent: boolean; estimate: { status: string; total: number | null } }>("submit-manual-inquiry", {
         idempotencyKey: draft.idempotencyKey, productSlug: draft.productSlug, quantity,
         specifications: { ...specifications, ...(draft.samples.coverSample ? { coverSampleChoice: draft.samples.coverSample } : {}) },
         customerType: draft.contact.customerType, contactName: draft.contact.contactName, phone: draft.contact.phone, email: draft.contact.email,
@@ -131,7 +132,9 @@ export function OrderRequestForm() {
         shippingId: draft.contact.shippingId, shippingDistrict: draft.contact.district, deliveryAddress: draft.contact.address,
         expectedDate: wantedDate, customerNotes: notes, privacyConsent: draft.privacyConsent, attachments,
       });
-      setResult({ referenceNo: response.referenceNo, emailSent: response.emailSent, priced: response.estimate?.status === "priced" });
+      const priced = response.estimate?.status === "priced" && typeof response.estimate.total === "number";
+      if (priced) saveCheckout({ referenceNo: response.referenceNo, total: response.estimate.total!, productTitle: product!.title, quantity });
+      setResult({ referenceNo: response.referenceNo, emailSent: response.emailSent, priced });
       localStorage.removeItem(DRAFT_KEY);
       setMessage("");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -145,10 +148,10 @@ export function OrderRequestForm() {
 
   if (result) {
     return <div className="order-shell"><section className="order-panel summary-panel order-success" aria-live="polite">
-      <div className="summary-banner"><span aria-hidden="true">✓</span><div><strong>需求已送出</strong><small>需求編號：{result.referenceNo}</small></div></div>
-      <p>{result.emailSent ? `${result.priced ? "系統試算報價單" : "需求確認信"}已寄到 ${draft.contact.email}。` : "我們已收到你的需求。"}專人確認規格、金額與交期後，會以 Email 寄出正式報價與確認連結，報價有效期限為 3 天。</p>
-      <p className="order-disclaimer"><strong>提醒</strong><span>送出需求不代表訂單成立，也不代表已確認交期；請以正式報價為準。</span></p>
-      <div className="order-actions"><button className="button button-primary" onClick={startOver} type="button">再填一筆需求</button><Link className="button button-secondary" href="/">回首頁</Link></div>
+      <div className="summary-banner"><span aria-hidden="true">✓</span><div><strong>訂單已送出</strong><small>訂單編號：{result.referenceNo}</small></div></div>
+      <p>{result.emailSent ? `${result.priced ? "系統試算報價單" : "需求確認信"}已寄到 ${draft.contact.email}。` : "我們已收到你的訂單。"}{result.priced ? "請按下方按鈕前往結帳。" : "專人確認規格與金額後會以 Email 與你聯繫。"}交期由專人確認後通知。</p>
+      <p className="order-disclaimer"><strong>提醒</strong><span>本站為示範網站，結帳使用模擬 LINE Pay 頁面，不會實際扣款。</span></p>
+      <div className="order-actions">{result.priced && <Link className="button button-primary" href={`/checkout/linepay/?ref=${encodeURIComponent(result.referenceNo)}`}>前往結帳（LINE Pay 示範）</Link>}<button className={`button ${result.priced ? "button-secondary" : "button-primary"}`} onClick={startOver} type="button">再填一筆訂單</button><Link className="button button-secondary" href="/">回首頁</Link></div>
     </section></div>;
   }
 
@@ -161,6 +164,7 @@ export function OrderRequestForm() {
     {product && <>
       <section className="order-panel" id="specifications" ref={specRef}>
         <div className="order-heading"><p>STEP 02 ／ SPECIFICATION</p><h2>{product.title}製作規格</h2><span>{product.description.replace("【暫存內容】", "")}</span></div>
+        <ModeSwitch onChange={(mode) => setValue("mode", mode)} values={draft.values} />
         <div className="form-sheet"><div className="quote-field-grid">
           <SpecFields idPrefix="order" onChange={setValue} slug={product.slug} values={draft.values} />
           {commonFields.map((field) => <CommonInput field={field} idPrefix="order" key={field.id} onChange={(value) => setValue(field.id, field.id === "quantity" ? value.replace(/[^\d]/g, "") : value)} value={draft.values[field.id] ?? ""} />)}
@@ -187,11 +191,11 @@ export function OrderRequestForm() {
       </section>
 
       <section className="order-panel summary-panel" id="order-summary">
-        <div className="order-heading"><p>STEP 04 ／ SUBMIT</p><h2>確認並送出</h2><span>送出後會先寄出試算報價單；正式報價由專人確認後寄出。</span></div>
+        <div className="order-heading"><p>STEP 04 ／ SUBMIT</p><h2>確認並送出</h2><span>送出後會寄出試算報價單，並可直接前往結帳。</span></div>
         <dl className="order-summary"><div><dt>產品</dt><dd>{product.title}</dd></div><div><dt>數量</dt><dd>{draft.values.quantity || "—"} 本</dd></div>{summary.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}{files.length > 0 && <div><dt>附件</dt><dd>{files.length} 個檔案</dd></div>}</dl>
         <div className="order-estimate"><PriceBreakdown compact estimate={estimate} /></div>
         <label className="choice-pill order-consent" htmlFor="order-privacy"><input checked={draft.privacyConsent} id="order-privacy" onChange={(event) => setDraft({ ...draft, privacyConsent: event.target.checked })} type="checkbox" /><span>我同意以上個人資料僅供鴻萊處理本次製作與聯繫使用。</span></label>
-        <div className="order-actions"><button className="button button-primary" disabled={submitting} onClick={submit} type="button">{submitting ? "正在送出……" : "送出需求"}</button></div>
+        <div className="order-actions"><button className="button button-primary" disabled={submitting} onClick={submit} type="button">{submitting ? "正在送出……" : "送出訂單"}</button></div>
         <p aria-live="polite" className="form-message">{message}</p>
       </section>
     </>}

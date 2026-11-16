@@ -41,6 +41,7 @@ export const productFormTypeBySlug = {
   "butterfly-book": "book-binding",
   "menu-production": "menu",
   "q-rod-hardcover": "book-binding",
+  "traditional-thread-binding": "book-binding",
   "screw-contract": "book-binding",
 } as const satisfies Record<string, FormType>;
 

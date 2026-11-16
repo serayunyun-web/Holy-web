@@ -20,7 +20,7 @@ export default function OrderPage() {
           </div>
         </div>
       </section>
-      <section className="order-notice page-container"><strong>下單流程</strong><span>送出需求後會寄出試算報價單；專人確認規格、金額與交期後，再寄出正式報價與確認連結，你點選確認後訂單才成立。</span></section>
+      <section className="order-notice page-container"><strong>下單流程</strong><span>選好規格、填寫聯絡資料後送出訂單，系統會寄出試算報價單，並可直接前往結帳（本站為示範網站，使用模擬 LINE Pay）。交期由專人確認後通知。</span></section>
       <OrderRequestForm />
     </main>
   );

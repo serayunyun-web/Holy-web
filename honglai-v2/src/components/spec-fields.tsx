@@ -1,6 +1,6 @@
 "use client";
 
-import { ESTIMATE_DISCLAIMER, isAutoPriced, motorDistricts, shippingChoices, visiblePricingFields, type Estimate, type PricingField } from "@/lib/pricing";
+import { ESTIMATE_DISCLAIMER, MODE_DESIGNER, MODE_SIMPLE, isAutoPriced, isDesigner, motorDistricts, shippingChoices, visiblePricingFields, type Estimate, type PricingField } from "@/lib/pricing";
 import { fieldsByProduct, productFormTypeBySlug, type OrderField } from "@/data/order-options";
 
 type Values = Record<string, string>;
@@ -52,13 +52,26 @@ export function CommonInput(props: { field: OrderField; value: string; onChange:
   return <OrderInput {...props} />;
 }
 
+/** 一般客戶／設計師模式切換。 */
+export function ModeSwitch({ values, onChange }: { values: Values; onChange: (mode: string) => void }) {
+  const current = isDesigner(values) ? MODE_DESIGNER : MODE_SIMPLE;
+  const modes = [
+    { id: MODE_SIMPLE, title: "一般客戶", note: "簡單選，一目了然" },
+    { id: MODE_DESIGNER, title: "設計師", note: "紙種、內頁張數、單雙面、混合印刷" },
+  ];
+  return <div className="mode-switch" role="group" aria-label="填寫模式">
+    {modes.map((mode) => <button aria-pressed={current === mode.id} key={mode.id} onClick={() => onChange(mode.id)} type="button"><strong>{mode.title}</strong><small>{mode.note}</small></button>)}
+  </div>;
+}
+
 /** 規格摘要：回傳 [欄位名稱, 值]，供摘要、Email 與工作單使用。 */
 export function specSummary(slug: string, values: Values): [string, string][] {
   const fields: { id: string; label: string }[] = isAutoPriced(slug) ? visiblePricingFields(slug, values) : visibleManualFields(slug, values);
-  return fields.filter((field) => values[field.id]).map((field) => {
+  const rows = fields.filter((field) => values[field.id]).map((field): [string, string] => {
     const unit = "unit" in field ? (field as { unit: string }).unit : "";
     return [field.label, `${values[field.id]}${unit && /^\d+$/.test(values[field.id]) ? ` ${unit}` : ""}`];
   });
+  return isDesigner(values) ? [["填寫模式", MODE_DESIGNER], ...rows] : rows;
 }
 
 export function ShippingPicker({ shippingId, district, onChange, idPrefix }: { shippingId: string; district: string; onChange: (next: { shippingId?: string; district?: string }) => void; idPrefix: string }) {
