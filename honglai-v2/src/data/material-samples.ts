@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 export type SampleKind = "cover" | "corner";
 
 export type LeatherSeriesId = "grain" | "jade" | "pearl" | "silk" | "cloud" | "solid";
@@ -37,7 +38,7 @@ const ALL_HARDCOVER = ["所有精裝產品"] as const;
 const leather = (series: LeatherSeriesId, digitalFoil: boolean, codes: readonly string[]): MaterialSample[] => {
   const seriesName = leatherSeries.find((item) => item.id === series)!.name;
   return codes.map((code) => ({
-    kind: "cover", code, name: seriesName, image: `/images/samples/leather/${code.toLowerCase()}.webp`,
+    kind: "cover", code, name: seriesName, image: withBase(`/images/samples/leather/${code.toLowerCase()}.webp`),
     series, digitalFoil, appliesTo: ALL_HARDCOVER, description: "", enabled: true,
   }));
 };
@@ -50,7 +51,7 @@ export const materialSamples: readonly MaterialSample[] = [
   ...leather("cloud", false, ["Y12", "Y22", "Y33", "Y42", "Y43", "Y62", "Y63", "Y93"]),
   ...leather("solid", false, ["B20", "B30", "B31", "B50", "B60", "B90", "N40"]),
   {
-    kind: "cover", code: "施工本專用皮", name: "單色系列", image: "/images/samples/leather/construction.webp",
+    kind: "cover", code: "施工本專用皮", name: "單色系列", image: withBase("/images/samples/leather/construction.webp"),
     series: "solid", digitalFoil: false, appliesTo: ["工程施工本"], description: "工程施工本專用皮面。", enabled: true,
   },
 ];

@@ -17,6 +17,10 @@
   --radius-button: 999px;
   --space-section: clamp(4rem, 7vw, 6.5rem);
   --shadow-soft: 0 18px 45px rgb(42 73 65 / 10%);
+  /* 字體變數放在 :root，webpack 與 turbopack 建置都讀得到 */
+  --font-sans: var(--font-noto-sans-tc), "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-display: var(--font-sans);
+  --font-latin: var(--font-outfit), var(--font-sans);
 }
 
 @theme inline {
@@ -30,9 +34,6 @@
   --color-brown: var(--brown);
   --color-brown-soft: var(--brown-soft);
   --color-line: var(--line);
-  --font-sans: var(--font-noto-sans-tc), "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --font-display: var(--font-sans);
-  --font-latin: var(--font-outfit), var(--font-sans);
 }
 
 * { box-sizing: border-box; }
@@ -1183,7 +1184,7 @@ html.paw-cursor-active body * {
 }
 
 /* Homepage 3D book hero — reuses .home-hero-stage so its height always matches the original banner */
-.home-hero-3d { position: relative; overflow: hidden; background: #f5eee0 url("/images/home/hero-torn-paper.webp") left center / cover no-repeat; }
+.home-hero-3d { position: relative; overflow: hidden; background: #f5eee0 var(--hero-torn-paper) left center / cover no-repeat; }
 .home-hero-3d .home-hero-stage { overflow: hidden; }
 .home-hero-3d-layout { display: grid; grid-template-columns: minmax(0, 555px) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
 .home-hero-3d .home-hero-copy { width: auto; }

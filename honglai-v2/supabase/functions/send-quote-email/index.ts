@@ -42,7 +42,7 @@ Deno.serve(async (request) => {
 
     const inquiry = quote.manual_inquiries as unknown as { contact_name: string; email: string; manual_inquiry_items: { product_name: string; product_slug: string; quantity: number; specifications: Record<string, string> }[] };
     const item = inquiry.manual_inquiry_items[0];
-    const link = `${origin}/quote/confirm/#t=${token}`;
+    const link = `${origin}${Deno.env.get("SITE_BASE_PATH") ?? ""}/quote/confirm/#t=${token}`;
     const sent = await sendEmail({
       to: inquiry.email,
       subject: `【鴻萊興業】正式報價單（${quote.quote_no}），請於 3 天內確認`,

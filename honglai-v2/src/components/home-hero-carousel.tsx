@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { withBase } from "@/lib/base-path";
 
 const slides = [
   {
     id: "brand",
-    image: "/images/banners/home-brand-desktop-hq.webp",
+    image: withBase("/images/banners/home-brand-desktop-hq.webp"),
     alt: "鴻萊興業裝訂與印刷成品展示",
     label: "品牌形象",
     title: <>用印刷，<br /><span>裝訂</span>每一個重要時刻。</>,
@@ -17,7 +18,7 @@ const slides = [
   },
   {
     id: "custom",
-    image: "/images/banners/home-b2c-desktop-hq.webp",
+    image: withBase("/images/banners/home-b2c-desktop-hq.webp"),
     alt: "少量客製與個人創作書冊展示",
     label: "少量客製",
     title: <>即使只有一本，<br />也值得<span>用心製作</span>。</>,
@@ -27,7 +28,7 @@ const slides = [
   },
   {
     id: "foil",
-    image: "/images/banners/home-foil-desktop-hq.webp",
+    image: withBase("/images/banners/home-foil-desktop-hq.webp"),
     alt: "數位燙金皮革精裝封面展示",
     label: "數位燙金",
     title: <>數位燙金，<br />讓<span>精緻</span>更輕鬆實現。</>,

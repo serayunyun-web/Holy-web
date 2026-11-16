@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { OrderRequestForm } from "@/components/order-request-form";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = { title: "線上下單" };
 
@@ -8,7 +9,7 @@ export default function OrderPage() {
   return (
     <main>
       <section className="inner-image-hero order-image-hero">
-        <Image alt="材質、紙張與裝訂規格靈感板" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/inquiry/inquiry-banner-desktop.webp" />
+        <Image alt="材質、紙張與裝訂規格靈感板" className="inner-image-hero-media" fill priority sizes="100vw" src={withBase("/images/inquiry/inquiry-banner-desktop.webp")} />
         <div className="inner-image-hero-shade" aria-hidden="true" />
         <div className="page-container inner-image-hero-content">
           <div className="inner-image-hero-copy">

@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { cooperationBenefits, cooperationModes, cooperationSteps, partnerAudiences } from "@/data/business";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = { title: "企業合作", description: "數位燙金皮革封面、半成品加工、完整裝訂代工與特殊加工合作。" };
 
 export default function BusinessPage() {
   return <main className="business-page">
     <section className="inner-image-hero business-image-hero">
-      <Image alt="企業合作精裝書冊、鴻萊標誌燙金與材料樣品" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/business/business-hero-desktop.jpg" />
+      <Image alt="企業合作精裝書冊、鴻萊標誌燙金與材料樣品" className="inner-image-hero-media" fill priority sizes="100vw" src={withBase("/images/business/business-hero-desktop.jpg")} />
       <div className="inner-image-hero-shade" aria-hidden="true" />
       <div className="page-container inner-image-hero-content">
         <div className="inner-image-hero-copy">

@@ -5,6 +5,7 @@ import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { ProductCard } from "@/components/product-card";
 import { homeNews } from "@/data/home-news";
 import { featuredProducts } from "@/data/site";
+import { withBase } from "@/lib/base-path";
 
 const processSteps = [
   { number: "01", title: "選擇產品或服務", description: "從實際需求選擇合適的產品或加工項目。" },
@@ -45,11 +46,11 @@ export default function Home() {
           <div className="section-heading audience-heading"><div><p className="eyebrow">Find Your Way</p><h2 id="audience-title">依你的需求快速開始</h2></div></div>
           <div className="audience-grid">
             <Link className="audience-card business-card" href="/business">
-              <span className="audience-symbol" aria-hidden="true"><Image alt="" height={560} src="/images/home/audience-b2b.png" width={560} /></span>
+              <span className="audience-symbol" aria-hidden="true"><Image alt="" height={560} src={withBase("/images/home/audience-b2b.png")} width={560} /></span>
               <div><p>印刷同業、影印店、企業採購與大量加工需求</p><h3>我是企業方</h3><span className="audience-action">前往企業合作 →</span></div>
             </Link>
             <Link className="audience-card creator-card" href="/services">
-              <span className="audience-symbol" aria-hidden="true"><Image alt="" height={560} src="/images/home/audience-b2c.png" width={560} /></span>
+              <span className="audience-symbol" aria-hidden="true"><Image alt="" height={560} src={withBase("/images/home/audience-b2c.png")} width={560} /></span>
               <div><p>一般消費者、個人作品、少量客製與裝訂需求</p><h3>我是個人／創作者</h3><span className="audience-action">瀏覽服務與產品 →</span></div>
             </Link>
           </div>

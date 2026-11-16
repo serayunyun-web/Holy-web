@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SocialLinks } from "@/components/social-links";
 import { navigation } from "@/data/site";
+import { withBase } from "@/lib/base-path";
 
 export function Header() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export function Header() {
             height={250}
             loading="eager"
             priority
-            src="/honglai-logo.png"
+            src={withBase("/honglai-logo.png")}
             style={{ height: "auto" }}
             width={964}
           />

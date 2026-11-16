@@ -1,6 +1,7 @@
 "use client";
 
 import { ADMIN_BASE } from "@/lib/admin-path";
+import { BASE_PATH } from "@/lib/base-path";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAdmin } from "@/components/admin/admin-shell";
@@ -94,7 +95,7 @@ export function AdminInquiry() {
     });
     if (error || !data) { setBusy(false); setMessage(errorText[error?.message ?? ""] ?? "報價建立失敗，請稍後再試。"); return; }
     const created = data as { quote_id: string; quote_no: string; token: string };
-    const confirmLink = `${window.location.origin}/quote/confirm/#t=${created.token}`;
+    const confirmLink = `${window.location.origin}${BASE_PATH}/quote/confirm/#t=${created.token}`;
     setLink(confirmLink);
     try {
       const sent = await callPublicFunction<{ sent: boolean; to: string }>("send-quote-email", { quoteId: created.quote_id, token: created.token }, session.access_token);

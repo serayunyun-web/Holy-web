@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type ReactNode, useMemo, useState } from "react";
+import { withBase } from "@/lib/base-path";
 import {
   faqCategories,
   visibleFaqCategories,
@@ -284,7 +285,7 @@ export function FaqBrowser() {
   return (
     <main className="faq-page">
       <section className="faq-intro faq-image-hero">
-        <Image alt="窗邊自然光、書冊與飛鳥意象" className="faq-intro-media" fill priority sizes="100vw" src="/images/faq/faq-banner-desktop.webp" />
+        <Image alt="窗邊自然光、書冊與飛鳥意象" className="faq-intro-media" fill priority sizes="100vw" src={withBase("/images/faq/faq-banner-desktop.webp")} />
         <div className="faq-intro-shade" aria-hidden="true" />
         <div className="page-container faq-intro-inner">
           <div>

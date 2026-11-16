@@ -4,6 +4,7 @@ import { AiFaqAssistant } from "@/components/ai-faq-assistant";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { LendAPawCursor } from "@/components/lend-a-paw-cursor";
+import { withBase } from "@/lib/base-path";
 import "./globals.css";
 
 const notoSansTC = Noto_Sans_TC({ weight: "variable", display: "swap", preload: false, variable: "--font-noto-sans-tc" });
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html className={`${notoSansTC.variable} ${outfit.variable}`} data-scroll-behavior="smooth" lang="zh-Hant">
+    <html className={`${notoSansTC.variable} ${outfit.variable}`} style={{ "--hero-torn-paper": `url("${withBase("/images/home/hero-torn-paper.webp")}")` } as React.CSSProperties} data-scroll-behavior="smooth" lang="zh-Hant">
       <body>
         <a className="skip-link" href="#main-content">跳至主要內容</a>
         <Header />

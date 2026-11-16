@@ -4,13 +4,14 @@ import Link from "next/link";
 import { ContactOpenStatus } from "@/components/contact-open-status";
 import { ContactQuickActions } from "@/components/contact-quick-actions";
 import { contactInfo } from "@/data/contact";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = { title: "聯絡我們" };
 
 export default function ContactPage() {
   return <main>
     <section className="inner-image-hero contact-image-hero">
-      <Image alt="信封、信紙、名片與書寫文具" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/contact/contact-banner-desktop.webp" />
+      <Image alt="信封、信紙、名片與書寫文具" className="inner-image-hero-media" fill priority sizes="100vw" src={withBase("/images/contact/contact-banner-desktop.webp")} />
       <div className="inner-image-hero-shade" aria-hidden="true" />
       <div className="page-container inner-image-hero-content">
         <div className="inner-image-hero-copy">

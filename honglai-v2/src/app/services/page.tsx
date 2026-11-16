@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ServicesCatalog } from "@/components/services-catalog";
 import { activeCategories, activeProducts, catalogFilter } from "@/data/catalog";
 import Link from "next/link";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = { title: "服務與產品", description: "瀏覽鴻萊興業的論文書冊、工程企業、創作生活與裝訂加工服務。" };
 
@@ -10,7 +11,7 @@ export default function ServicesPage() {
   return (
     <main>
       <section className="inner-image-hero services-image-hero">
-        <Image alt="精裝書冊、線圈裝訂與多種書冊加工成品" className="inner-image-hero-media" fill priority sizes="100vw" src="/images/services/services-banner-desktop.webp" />
+        <Image alt="精裝書冊、線圈裝訂與多種書冊加工成品" className="inner-image-hero-media" fill priority sizes="100vw" src={withBase("/images/services/services-banner-desktop.webp")} />
         <div className="inner-image-hero-shade" aria-hidden="true" />
         <div className="page-container inner-image-hero-content">
           <div className="inner-image-hero-copy">

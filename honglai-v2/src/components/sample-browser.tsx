@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { leatherSeries, materialSamples, sampleKindNames, type LeatherSeriesId, type MaterialSample, type SampleKind } from "@/data/material-samples";
+import { withBase } from "@/lib/base-path";
 
 type FoilFilter = "all" | "digital" | "traditional";
 
@@ -49,7 +50,7 @@ export function SampleBrowser() {
       const field = sample.kind === "cover" ? "coverSample" : "corner";
       localStorage.setItem(ORDER_DRAFT_KEY, JSON.stringify({ ...draft, samples: { ...draft.samples, [field]: `${sample.name}（${sample.code}）` } }));
     } catch { /* 草稿無法解析時仍安全返回下單頁 */ }
-    window.location.assign(returnTo || "/order");
+    window.location.assign(withBase(returnTo || "/order"));
   };
 
   return (

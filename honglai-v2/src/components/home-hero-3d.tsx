@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { withBase } from "@/lib/base-path";
 
 type ModelViewerTexture = unknown;
 type ModelViewerMaterial = {
@@ -15,8 +16,8 @@ type ModelViewerElement = HTMLElement & {
   createTexture: (url: string) => Promise<ModelViewerTexture>;
 };
 
-const MODEL_SRC = "/models/book.glb";
-const LEATHER_SRC = "/models/leather-base.webp";
+const MODEL_SRC = withBase("/models/book.glb");
+const LEATHER_SRC = withBase("/models/leather-base.webp");
 const LEATHER_MATERIAL = "MAT_Tan_Leather";
 const COLOR_NOTICE = "顏色僅供參考，實際商品可能因螢幕顯示與光線而有色差。";
 

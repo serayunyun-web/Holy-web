@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 export type CatalogTone = "teal" | "brown";
 
 export type ProductCategory = {
@@ -110,7 +111,7 @@ const productPhotoCount: Record<string, number> = {
   "screw-contract": 3,
 };
 
-const photoPath = (slug: string, key: string) => `/images/products/${slug}-${key}.webp`;
+const photoPath = (slug: string, key: string) => withBase(`/images/products/${slug}-${key}.webp`);
 
 const cardImageFor = (slug: string) => (productPhotoCount[slug] ? photoPath(slug, "01") : null);
 
