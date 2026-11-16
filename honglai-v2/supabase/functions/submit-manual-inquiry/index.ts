@@ -1,10 +1,9 @@
 import { hasValidPublishableKey } from "../_shared/auth.ts";
 import { ATTACHMENT_BUCKET, MAX_ATTACHMENTS, attachmentPath, attachmentProblem } from "../_shared/attachment-rules.ts";
 import { adminClient, allowSubmission, publicNumber } from "../_shared/database.ts";
-import { sendEmail, trialQuoteEmail } from "../_shared/email.ts";
 import { allowedOrigin, corsHeaders, response } from "../_shared/http.ts";
-import { ESTIMATE_DISCLAIMER, calculateEstimate, isAutoPriced, shippingChoices, visiblePricingFields } from "../_shared/pricing.ts";
-import { allowedManualSpecKeys, specRows } from "../_shared/spec-labels.ts";
+import { calculateEstimate, isAutoPriced, shippingChoices, visiblePricingFields } from "../_shared/pricing.ts";
+import { allowedManualSpecKeys } from "../_shared/spec-labels.ts";
 import { email, isoDate, phone, positiveInteger, submissionFingerprints, text, uuid, type JsonObject } from "../_shared/validation.ts";
 
 const products = {
@@ -43,6 +42,20 @@ function specifications(body: JsonObject, productSlug: string) {
   const auto = isAutoPriced(productSlug);
   const pricingIds = new Set(visiblePricingFields(productSlug, raw).map((field) => field.id));
   return Object.fromEntries(Object.entries(raw).filter(([key]) => commonSpecKeys.has(key) || (auto ? pricingIds.has(key) : allowedManualSpecKeys.has(key))));
+}
+
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+/** 一次性付款憑證：只回傳給送出訂單的瀏覽器，資料庫只存 SHA-256。已付款的訂單不再發新憑證。 */
+async function issuePaymentToken(client: ReturnType<typeof adminClient>, inquiryNo: string) {
+  const token = Array.from(crypto.getRandomValues(new Uint8Array(32))).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  const { data, error } = await client.from("manual_inquiries").update({ payment_token_hash: await sha256Hex(token) })
+    .eq("inquiry_no", inquiryNo).neq("payment_status", "paid").select("id");
+  if (error) throw error;
+  return data?.length ? token : null;
 }
 
 type Attachment = { path: string; name: string; size: number; type: string };
@@ -135,7 +148,10 @@ Deno.serve(async (request) => {
     const client = adminClient();
     const previous = await client.from("manual_inquiries").select("inquiry_no").eq("idempotency_key", idempotencyKey).maybeSingle();
     if (previous.error) throw previous.error;
-    if (previous.data) return response(origin, 200, { referenceNo: previous.data.inquiry_no, duplicate: true, emailSent: false, estimate });
+    if (previous.data) {
+      const paymentToken = await issuePaymentToken(client, previous.data.inquiry_no);
+      return response(origin, 200, { referenceNo: previous.data.inquiry_no, duplicate: true, emailSent: false, estimate, paymentToken });
+    }
     if (!await allowSubmission(client, await submissionFingerprints(request, emailValue), "manual_inquiry")) {
       return response(origin, 429, { error: "rate_limited" });
     }
@@ -157,13 +173,9 @@ Deno.serve(async (request) => {
     });
     if (error) throw error;
 
-    const emailSent = await sendEmail({
-      to: emailValue,
-      subject: `【鴻萊興業】${estimate.status === "priced" ? "系統試算報價單" : "已收到您的製作需求"}（${referenceNo}）`,
-      html: trialQuoteEmail({ referenceNo, contactName, productName: product[1], quantity, specs: specRows(productSlug, specs), estimate, disclaimer: ESTIMATE_DISCLAIMER }),
-    });
-    if (emailSent) await client.from("manual_inquiries").update({ trial_email_sent_at: new Date().toISOString() }).eq("inquiry_no", referenceNo);
-    return response(origin, 201, { referenceNo, emailSent, estimate });
+    // 送出時不寄信；付款成功後才寄客人版工作單（見 mock-payment）。
+    const paymentToken = await issuePaymentToken(client, referenceNo);
+    return response(origin, 201, { referenceNo, emailSent: false, estimate, paymentToken });
   } catch (error) {
     const invalid = error instanceof Error && error.message.startsWith("invalid:");
     console.error("submit-manual-inquiry", error);

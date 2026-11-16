@@ -11,7 +11,8 @@ export type WorkOrderSnapshot = {
   expected_date?: string | null;
   items?: { product_name: string; product_slug: string; quantity: number; specifications: Record<string, string> }[];
   attachments?: { name: string; size: number }[];
-  quote?: { quote_no: string; version: number; items: { label: string; unitPrice: number; quantity: number; unit: string; amount: number }[]; shipping_fee: number; subtotal: number; total: number; delivery_date: string; notes: string | null; accepted_at: string };
+  quote?: { quote_no: string; version: number; items: { label: string; unitPrice: number; quantity: number; unit: string; amount: number }[]; shipping_fee: number; subtotal: number; total: number; delivery_date: string | null; notes: string | null; accepted_at: string };
+  payment?: { method?: string; status?: string; paid_at?: string };
 };
 
 export type WorkOrderRecord = {
@@ -36,7 +37,7 @@ export function buildWorkOrderSheet(record: WorkOrderRecord) {
     { title: "產品資料", rows: [["商品", item?.product_name ?? ""], ["尺寸", pick("成品尺寸") ?? pick("原稿 → 成品尺寸") ?? pick("原圖 → 成品尺寸") ?? pick("圖面尺寸")], ["數量", item?.quantity ?? null]] },
     { title: "封面資訊", rows: specs.filter(([label]) => coverKeys.includes(label)) },
     { title: "裝訂與加工", rows: specs.filter(([label]) => !coverKeys.includes(label) && !["成品尺寸"].includes(label)) },
-    { title: "製作管理", rows: [["交貨日期", asDate(record.due_date ?? snap.quote?.delivery_date)], ["配送方式", [snap.delivery?.shipping?.label ?? snap.delivery?.method, snap.delivery?.shipping?.district].filter(Boolean).join("・")], ["配送地址", snap.delivery?.address ?? ""], ["負責人", record.assignee ?? ""], ["製作進度", workOrderStatusLabels[record.status] ?? record.status], ["客戶備註", snap.customer_notes ?? ""], ["報價備註", snap.quote?.notes ?? ""], ["內部製作備註", record.production_notes ?? ""], ["附件", (snap.attachments ?? []).map((file) => file.name).join("、")]] },
+    { title: "製作管理", rows: [["交貨日期", asDate(record.due_date ?? snap.quote?.delivery_date)], ["付款", snap.payment ? `${snap.payment.method ?? ""}・已付款` : "正式報價確認（未線上付款）"], ["付款時間", asDate(snap.payment?.paid_at)], ["配送方式", [snap.delivery?.shipping?.label ?? snap.delivery?.method, snap.delivery?.shipping?.district].filter(Boolean).join("・")], ["配送地址", snap.delivery?.address ?? ""], ["負責人", record.assignee ?? ""], ["製作進度", workOrderStatusLabels[record.status] ?? record.status], ["客戶備註", snap.customer_notes ?? ""], ["報價備註", snap.quote?.notes ?? ""], ["內部製作備註", record.production_notes ?? ""], ["附件", (snap.attachments ?? []).map((file) => file.name).join("、")]] },
   ];
   const prices: SheetPrices = {
     header: ["項目", "單價", "數量", "單位", "小計"],

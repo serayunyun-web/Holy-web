@@ -5,7 +5,7 @@ export const quoteStatusLabels: Record<string, string> = {
   sent: "待客戶確認", expired: "已失效（逾期）", accepted: "客戶已確認", superseded: "已被新版取代", revoked: "已撤回",
 };
 export const workOrderStatusLabels: Record<string, string> = {
-  pending_confirmation: "待內部確認", scheduled: "待安排", in_production: "製作中", completed: "已完成", delivered: "已交付",
+  pending_confirmation: "待確認", scheduled: "已確認・待製作", in_production: "製作中", completed: "已完成", delivered: "已交付",
 };
 
 export const money = (value: number | null | undefined) => value === null || value === undefined ? "—" : `NT$${Number(value).toLocaleString("zh-TW")}`;
@@ -14,3 +14,6 @@ export const dateTime = (value: string | null | undefined) => value ? new Intl.D
 export function quoteEffectiveStatus(quote: { status: string; valid_until: string }) {
   return quote.status === "sent" && new Date(quote.valid_until) < new Date() ? "expired" : quote.status;
 }
+export const paymentStatusLabels: Record<string, string> = {
+  unpaid: "未付款", paid: "已付款", failed: "付款失敗", cancelled: "已取消付款",
+};

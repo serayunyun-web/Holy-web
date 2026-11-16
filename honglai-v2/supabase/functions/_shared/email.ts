@@ -71,3 +71,43 @@ export function formalQuoteEmail(input: {
   const button = `<p style="text-align:center;margin:24px 0"><a href="${escapeHtml(input.link)}" style="display:inline-block;background:#1d6f66;color:#fff;text-decoration:none;padding:14px 28px;border-radius:10px;font-weight:700">查看並確認報價</a></p><p style="font-size:12px;color:#7b857f;word-break:break-all">若按鈕無法開啟，請複製此網址：${escapeHtml(input.link)}</p><p style="font-size:12px;color:#7b857f">此為正式報價確認，不是線上付款。</p>`;
   return layout("正式報價單", intro + specs + prices + button);
 }
+
+/** 訂單快照（與工作單相同資料，見 record_mock_payment）。 */
+export type OrderSnapshot = {
+  inquiry_no?: string;
+  customer?: { contact_name?: string; organization?: string | null; phone?: string; email?: string };
+  delivery?: { method?: string | null; address?: string | null; shipping?: { label?: string; fee?: number; district?: string } | null };
+  customer_notes?: string | null;
+  items?: { product_name: string; product_slug: string; quantity: number; specifications: Record<string, string> }[];
+  attachments?: { name: string }[];
+  quote?: { items: { label: string; unitPrice: number; quantity: number; unit: string; amount: number }[]; shipping_fee: number; subtotal: number; total: number };
+  payment?: { method?: string; paid_at?: string };
+};
+
+const taipeiDateTime = (value: string | undefined) => value ? new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "—";
+
+/** 客人版工作單：與內部工作單同一份資料，但不含負責人、製作進度、內部製作備註。 */
+export function customerWorkOrderEmail(input: { orderNo: string; workOrderNo: string; snapshot: OrderSnapshot; specs: [string, string][] }) {
+  const snap = input.snapshot;
+  const item = snap.items?.[0];
+  const shipping = snap.delivery?.shipping;
+  const section = (title: string, rows: [string, string][]) => rows.length ? `<h2 style="margin:22px 0 6px;font-size:16px;color:#1d6f66">${escapeHtml(title)}</h2>${table(rows)}` : "";
+  const intro = `<p style="font-size:14px;line-height:1.8">${escapeHtml(snap.customer?.contact_name)} 您好，已收到您的付款，訂單 <strong>${escapeHtml(input.orderNo)}</strong> 已成立。以下是您的訂單明細（工作單 ${escapeHtml(input.workOrderNo)}），請核對內容。</p>`;
+  const body = [
+    section("訂單資料", [["訂單編號", input.orderNo], ["工作單編號", input.workOrderNo], ["客戶", snap.customer?.organization || snap.customer?.contact_name || ""], ["聯絡人", snap.customer?.contact_name ?? ""], ["電話", snap.customer?.phone ?? ""]]),
+    section("產品資料", [["商品", item?.product_name ?? ""], ["數量", `${item?.quantity ?? ""} 本`], ...input.specs]),
+    section("配送", [["配送方式", [shipping?.label ?? snap.delivery?.method, shipping?.district].filter(Boolean).join("・")], ...(snap.delivery?.address ? [["配送地址", snap.delivery.address] as [string, string]] : [])]),
+    section("付款", [["付款方式", snap.payment?.method ?? "LINE Pay（示範）"], ["付款狀態", "已付款"], ["付款時間", taipeiDateTime(snap.payment?.paid_at)]]),
+    section("其他", [...(snap.customer_notes ? [["製作備註", snap.customer_notes] as [string, string]] : []), ...(snap.attachments?.length ? [["附件", snap.attachments.map((file) => file.name).join("、")] as [string, string]] : [])]),
+  ].join("");
+  const prices = snap.quote ? priceTable(snap.quote.items, [["商品小計", money(snap.quote.subtotal)], ["運費", money(snap.quote.shipping_fee)], ["合計（未稅）", money(snap.quote.total)]]) : "";
+  const next = `<p style="font-size:13px;line-height:1.8;background:#f3f7f5;padding:12px;border-radius:8px">專人確認製作內容後，會再寄信通知預計交期。本站為示範網站，付款為模擬 LINE Pay，未實際扣款。</p>`;
+  return layout("訂單明細（已付款）", intro + body + prices + next);
+}
+
+/** 後台確認訂單後的交期通知。 */
+export function orderConfirmedEmail(input: { orderNo: string; contactName: string; productName: string; quantity: number; dueDate: string }) {
+  const intro = `<p style="font-size:14px;line-height:1.8">${escapeHtml(input.contactName)} 您好，您的訂單 <strong>${escapeHtml(input.orderNo)}</strong> 已由專人確認，開始安排製作。</p>`;
+  const rows = table([["商品", input.productName], ["數量", `${input.quantity} 本`], ["預計交期", input.dueDate]]);
+  return layout("訂單已確認・交期通知", intro + rows + `<p style="font-size:13px;line-height:1.8">如需調整內容或交期，請直接回覆此信。</p>`);
+}

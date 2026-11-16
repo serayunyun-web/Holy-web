@@ -8,13 +8,13 @@ import { useAdmin } from "@/components/admin/admin-shell";
 import { callPublicFunction, supabaseBrowser } from "@/lib/supabase-public-api";
 import { specRows } from "@/lib/spec-labels";
 import { formatBytes } from "@/lib/attachments";
-import { dateTime, inquiryStatusLabels, money, quoteEffectiveStatus, quoteStatusLabels } from "@/lib/admin-labels";
+import { dateTime, inquiryStatusLabels, money, paymentStatusLabels, quoteEffectiveStatus, quoteStatusLabels } from "@/lib/admin-labels";
 import type { Estimate } from "@/lib/pricing";
 
 type Item = { label: string; unitPrice: string; quantity: string; unit: string };
 type Quote = { id: string; quote_no: string; version: number; status: string; total: number; subtotal: number; shipping_fee: number; items: { label: string; unitPrice: number; quantity: number; unit: string; amount: number }[]; delivery_date: string; notes: string | null; valid_until: string; created_at: string; accepted_at: string | null; email_sent_at: string | null };
 type Inquiry = {
-  id: string; inquiry_no: string; status: string; created_at: string; customer_type: string; contact_name: string; phone: string; email: string; organization: string | null; line_id: string | null;
+  id: string; inquiry_no: string; status: string; created_at: string; payment_status: string; paid_at: string | null; customer_type: string; contact_name: string; phone: string; email: string; organization: string | null; line_id: string | null;
   delivery_method: string | null; delivery_address: string | null; expected_date: string | null; customer_notes: string | null; special_requirements: string | null; internal_notes: string | null;
   estimate: Estimate | null; shipping: { label: string; fee: number; district?: string } | null;
   manual_inquiry_items: { product_name: string; product_slug: string; quantity: number; specifications: Record<string, string> }[];
@@ -22,6 +22,9 @@ type Inquiry = {
   quotes: Quote[];
   orders: { id: string; order_no: string; work_orders: { id: string; work_order_no: string } | null }[];
 };
+
+// 正式報價流程先隱藏（付款後自動成立訂單）；程式與資料保留，改成 true 即可恢復。
+const SHOW_FORMAL_QUOTE = false;
 
 const errorText: Record<string, string> = { forbidden: "只有 manager 以上可以送出正式報價。", inquiry_closed: "此需求已成立訂單或已關閉。", "invalid:items": "報價項目有誤，請檢查名稱、單價與數量。", "invalid:delivery_date": "請填寫交貨日期。" };
 
@@ -116,11 +119,11 @@ export function AdminInquiry() {
 
   return <>
     <div className="admin-heading"><div><Link className="no-print" href={`${ADMIN_BASE}/`}>← 回列表</Link><h1 className="admin-title">{inquiry.inquiry_no}</h1></div><span className={`admin-badge is-${inquiry.status}`}>{inquiryStatusLabels[inquiry.status]}</span></div>
-    {order && <p className="admin-callout">客戶已確認報價，訂單 <strong>{order.order_no}</strong> 已成立。{order.work_orders && <Link href={`${ADMIN_BASE}/work-order/?id=${order.work_orders.id}`}>查看工作單 {order.work_orders.work_order_no}</Link>}</p>}
+    {order && <p className="admin-callout">{inquiry.payment_status === "paid" ? "客人已付款" : "客戶已確認報價"}，訂單 <strong>{order.order_no}</strong> 已成立。{order.work_orders && <Link href={`${ADMIN_BASE}/work-order/?id=${order.work_orders.id}`}>前往確認訂單／工作單 {order.work_orders.work_order_no}</Link>}</p>}
 
     <div className="admin-grid">
       <section className="admin-card"><h2>客戶資料</h2><dl className="admin-dl">
-        {([["客戶類型", inquiry.customer_type], ["聯絡人", inquiry.contact_name], ["公司／學校", inquiry.organization], ["電話", inquiry.phone], ["Email", inquiry.email], ["LINE", inquiry.line_id], ["配送", inquiry.shipping ? `${inquiry.shipping.label}${inquiry.shipping.district ? `・${inquiry.shipping.district}` : ""}` : inquiry.delivery_method], ["地址", inquiry.delivery_address], ["希望完成日", inquiry.expected_date], ["建立時間", dateTime(inquiry.created_at)]] as [string, string | null][]).filter(([, value]) => value).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
+        {([["客戶類型", inquiry.customer_type], ["聯絡人", inquiry.contact_name], ["公司／學校", inquiry.organization], ["電話", inquiry.phone], ["Email", inquiry.email], ["LINE", inquiry.line_id], ["配送", inquiry.shipping ? `${inquiry.shipping.label}${inquiry.shipping.district ? `・${inquiry.shipping.district}` : ""}` : inquiry.delivery_method], ["地址", inquiry.delivery_address], ["希望完成日", inquiry.expected_date], ["建立時間", dateTime(inquiry.created_at)], ["付款狀態", `${paymentStatusLabels[inquiry.payment_status] ?? inquiry.payment_status}${inquiry.paid_at ? ` ${dateTime(inquiry.paid_at)}` : ""}`]] as [string, string | null][]).filter(([, value]) => value).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
       </dl></section>
       <section className="admin-card"><h2>製作規格</h2><dl className="admin-dl">
         <div><dt>產品</dt><dd>{item?.product_name}</dd></div><div><dt>數量</dt><dd>{item?.quantity} 本</dd></div>
@@ -133,10 +136,12 @@ export function AdminInquiry() {
     </div>
 
     <section className="admin-card"><h2>系統試算</h2>
-      {inquiry.estimate?.status === "priced" ? <p>試算合計 <strong>{money(inquiry.estimate.total)}</strong>（價格版本 {inquiry.estimate.priceVersion}；{inquiry.estimate.lines.length} 個項目已帶入下方報價）</p> : <p className="admin-muted">{inquiry.estimate?.reason ?? "此需求沒有系統試算。"}請在下方填寫人工報價。</p>}
+      {inquiry.estimate?.status === "priced" ? <p>試算合計 <strong>{money(inquiry.estimate.total)}</strong>（價格版本 {inquiry.estimate.priceVersion}）</p> : <p className="admin-muted">{inquiry.estimate?.reason ?? "此需求沒有系統試算。"}</p>}
     </section>
 
-    {!locked && <section className="admin-card"><h2>正式報價{quotes.length ? `（將建立第 ${quotes[0].version + 1} 版，舊版連結自動失效）` : ""}</h2>
+    {!SHOW_FORMAL_QUOTE && !locked && <section className="admin-card"><h2>處理</h2><p className="admin-muted">客人付款成功後會自動成立訂單。若客人不再付款，可以關閉這筆紀錄。</p><div className="admin-inline-actions"><button className="text-button" disabled={!canManage} onClick={() => window.confirm("確定關閉這筆紀錄？") && setStatus("closed")} type="button">關閉／取消</button></div></section>}
+
+    {SHOW_FORMAL_QUOTE && !locked && <section className="admin-card"><h2>正式報價{quotes.length ? `（將建立第 ${quotes[0].version + 1} 版，舊版連結自動失效）` : ""}</h2>
       <div className="admin-table-wrap"><table className="admin-table admin-quote-table"><thead><tr><th>項目</th><th>單價</th><th>數量</th><th>單位</th><th>小計</th><th /></tr></thead><tbody>
         {items.map((line, index) => <tr key={index}>
           <td><input aria-label="項目名稱" onChange={(event) => setItem(index, "label", event.target.value)} value={line.label} /></td>

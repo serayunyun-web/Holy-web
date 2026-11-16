@@ -124,7 +124,7 @@ export function OrderRequestForm() {
       }
       const { wantedDate, notes } = draft.values;
       const specifications = Object.fromEntries(Object.entries(draft.values).filter(([key, value]) => value && !["quantity", "wantedDate", "notes"].includes(key)));
-      const response = await callPublicFunction<{ referenceNo: string; emailSent: boolean; estimate: { status: string; total: number | null } }>("submit-manual-inquiry", {
+      const response = await callPublicFunction<{ referenceNo: string; emailSent: boolean; estimate: { status: string; total: number | null }; paymentToken: string | null }>("submit-manual-inquiry", {
         idempotencyKey: draft.idempotencyKey, productSlug: draft.productSlug, quantity,
         specifications: { ...specifications, ...(draft.samples.coverSample ? { coverSampleChoice: draft.samples.coverSample } : {}) },
         customerType: draft.contact.customerType, contactName: draft.contact.contactName, phone: draft.contact.phone, email: draft.contact.email,
@@ -132,8 +132,8 @@ export function OrderRequestForm() {
         shippingId: draft.contact.shippingId, shippingDistrict: draft.contact.district, deliveryAddress: draft.contact.address,
         expectedDate: wantedDate, customerNotes: notes, privacyConsent: draft.privacyConsent, attachments,
       });
-      const priced = response.estimate?.status === "priced" && typeof response.estimate.total === "number";
-      if (priced) saveCheckout({ referenceNo: response.referenceNo, total: response.estimate.total!, productTitle: product!.title, quantity });
+      const priced = response.estimate?.status === "priced" && typeof response.estimate.total === "number" && Boolean(response.paymentToken);
+      if (priced) saveCheckout({ referenceNo: response.referenceNo, total: response.estimate.total!, productTitle: product!.title, quantity, token: response.paymentToken! });
       setResult({ referenceNo: response.referenceNo, emailSent: response.emailSent, priced });
       localStorage.removeItem(DRAFT_KEY);
       setMessage("");
@@ -149,7 +149,7 @@ export function OrderRequestForm() {
   if (result) {
     return <div className="order-shell"><section className="order-panel summary-panel order-success" aria-live="polite">
       <div className="summary-banner"><span aria-hidden="true">✓</span><div><strong>訂單已送出</strong><small>訂單編號：{result.referenceNo}</small></div></div>
-      <p>{result.emailSent ? `${result.priced ? "系統試算報價單" : "需求確認信"}已寄到 ${draft.contact.email}。` : "我們已收到你的訂單。"}{result.priced ? "請按下方按鈕前往結帳。" : "專人確認規格與金額後會以 Email 與你聯繫。"}交期由專人確認後通知。</p>
+      <p>我們已收到你的訂單。{result.priced ? `請按下方按鈕前往結帳，付款完成後會把訂單明細寄到 ${draft.contact.email}。` : "專人確認規格與金額後會以 Email 與你聯繫。"}交期由專人確認後通知。</p>
       <p className="order-disclaimer"><strong>提醒</strong><span>本站為示範網站，結帳使用模擬 LINE Pay 頁面，不會實際扣款。</span></p>
       <div className="order-actions">{result.priced && <Link className="button button-primary" href={`/checkout/linepay/?ref=${encodeURIComponent(result.referenceNo)}`}>前往結帳（LINE Pay 示範）</Link>}<button className={`button ${result.priced ? "button-secondary" : "button-primary"}`} onClick={startOver} type="button">再填一筆訂單</button><Link className="button button-secondary" href="/">回首頁</Link></div>
     </section></div>;
@@ -191,7 +191,7 @@ export function OrderRequestForm() {
       </section>
 
       <section className="order-panel summary-panel" id="order-summary">
-        <div className="order-heading"><p>STEP 04 ／ SUBMIT</p><h2>確認並送出</h2><span>送出後會寄出試算報價單，並可直接前往結帳。</span></div>
+        <div className="order-heading"><p>STEP 04 ／ SUBMIT</p><h2>確認並送出</h2><span>送出後前往結帳，付款完成會寄出訂單明細。</span></div>
         <dl className="order-summary"><div><dt>產品</dt><dd>{product.title}</dd></div><div><dt>數量</dt><dd>{draft.values.quantity || "—"} 本</dd></div>{summary.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}{files.length > 0 && <div><dt>附件</dt><dd>{files.length} 個檔案</dd></div>}</dl>
         <div className="order-estimate"><PriceBreakdown compact estimate={estimate} /></div>
         <label className="choice-pill order-consent" htmlFor="order-privacy"><input checked={draft.privacyConsent} id="order-privacy" onChange={(event) => setDraft({ ...draft, privacyConsent: event.target.checked })} type="checkbox" /><span>我同意以上個人資料僅供鴻萊處理本次製作與聯繫使用。</span></label>

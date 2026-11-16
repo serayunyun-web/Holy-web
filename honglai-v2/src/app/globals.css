@@ -1377,6 +1377,9 @@ html.paw-cursor-active body * {
 .admin-badge.is-quoted, .admin-badge.is-sent, .admin-badge.is-scheduled, .admin-badge.is-in_production { background: #e1eefa; color: #2c5a85; }
 .admin-badge.is-converted, .admin-badge.is-accepted, .admin-badge.is-completed, .admin-badge.is-delivered { background: #dcefe8; color: var(--teal-deep); }
 .admin-badge.is-closed, .admin-badge.is-expired, .admin-badge.is-revoked, .admin-badge.is-superseded { background: #ececec; color: #666; }
+.admin-badge.is-payment-paid { background: #dcefe8; color: var(--teal-deep); }
+.admin-badge.is-payment-unpaid { background: #f8e6d6; color: #8a4e39; }
+.admin-badge.is-payment-failed, .admin-badge.is-payment-cancelled { background: #f6dcd6; color: #9b3b2a; }
 .admin-empty { padding: 2rem; color: var(--muted); text-align: center; }
 .admin-muted { color: var(--muted); font-size: .8rem; }
 .admin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
