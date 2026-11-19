@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HomeHero3D } from "@/components/home-hero-3d";
 import { HomeHeroCarousel } from "@/components/home-hero-carousel";
+import { HandDrawnTitle } from "@/components/hand-drawn-title";
 import { ProductCard } from "@/components/product-card";
 import { homeNews } from "@/data/home-news";
 import { featuredProducts } from "@/data/site";
@@ -64,7 +65,7 @@ export default function Home() {
             {homeNews.slice(0, 3).map((item) => (
               <article className="news-item" key={item.id}>
                 <time dateTime={item.date.replaceAll(".", "-")}>{item.date}</time>
-                <Link href={item.href}>{item.title}<span aria-hidden="true">→</span></Link>
+                <Link href={item.href}><HandDrawnTitle circle={item.circle} title={item.title} underline={item.underline} /><span aria-hidden="true" className="news-arrow">→</span></Link>
               </article>
             ))}
           </div>

@@ -339,8 +339,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .news-item { display: grid; grid-template-columns: 112px 1fr; gap: 1rem; align-items: center; border-bottom: 1px solid #bfd2ca; padding: 1.15rem .2rem; }
 .news-item time { color: var(--brown); font-family: var(--font-latin); font-size: .76rem; font-weight: 800; }
 .news-item a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-weight: 700; }
-.news-item a span { color: var(--teal-deep); transition: transform 160ms ease; }
-.news-item a:hover span { transform: translateX(4px); }
+.news-item a .news-arrow { flex: none; color: var(--teal-deep); transition: transform 160ms ease; }
+.news-item a:hover .news-arrow { transform: translateX(4px); }
 
 .company-section { background: var(--white); }
 .company-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 7vw, 6rem); align-items: center; }
@@ -1589,3 +1589,127 @@ h3 { font-weight: 800; }
 .mock-pay-result { justify-items: center; text-align: center; }
 .mock-pay-icon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: #2f9e5b; color: #fff; font-size: 1.8rem; font-weight: 900; }
 .mock-pay-result.is-failed .mock-pay-icon, .mock-pay-result.is-cancelled .mock-pay-icon { background: #c0563f; }
+
+/* 數位燙金介紹頁 */
+.foil-page { background: var(--paper); }
+.foil-meta { margin: 0 0 1.2rem; color: var(--brown); font-family: var(--font-latin); font-size: .85rem; font-weight: 700; }
+.foil-meta a { color: var(--teal-deep); }
+.foil-intro h1 { margin: 0 0 2rem; color: var(--ink); font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.2; }
+.foil-intro-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 320px); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.foil-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.6rem; padding: 0; list-style: none; }
+.foil-tags li { border-radius: 999px; background: var(--teal-soft); color: var(--teal-deep); padding: .35rem .95rem; font-size: .88rem; font-weight: 700; }
+.foil-copy h2 { margin: 0 0 1rem; font-size: clamp(1.3rem, 2.4vw, 1.6rem); }
+.foil-copy p { margin: 0 0 1rem; color: #3f524d; font-size: 1.02rem; line-height: 1.95; }
+.foil-video { overflow: hidden; border-radius: 22px; background: var(--ink); box-shadow: var(--shadow-soft); aspect-ratio: 9 / 16; }
+.foil-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.foil-compare { margin-top: clamp(3.5rem, 7vw, 5.5rem); text-align: center; }
+.foil-compare h2 { margin: 0 0 .7rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+.foil-compare > p { max-width: 720px; margin: 0 auto 1.8rem; color: var(--muted); font-size: .92rem; line-height: 1.8; }
+.foil-compare table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: var(--radius-card); background: white; box-shadow: 0 0 0 1px var(--line); }
+.foil-compare th, .foil-compare td { border: 1px solid var(--line); padding: 1.05rem 1rem; }
+.foil-compare thead th { background: var(--teal-soft); color: var(--teal-deep); font-weight: 800; }
+.foil-compare tbody th { width: 20%; font-weight: 700; }
+.foil-compare td.foil-digital { background: #eff6f2; color: var(--teal-deep); font-weight: 700; }
+.foil-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2.5rem; }
+@media (max-width: 760px) {
+  .foil-intro-grid { grid-template-columns: 1fr; }
+  .foil-video { width: min(100%, 300px); margin-inline: auto; }
+  .foil-compare table, .foil-compare tbody, .foil-compare tr, .foil-compare th, .foil-compare td { display: block; width: auto; }
+  .foil-compare table { background: transparent; box-shadow: none; }
+  .foil-compare thead { display: none; }
+  .foil-compare tbody tr { overflow: hidden; margin-bottom: .9rem; border: 1px solid var(--line); border-radius: 16px; background: white; text-align: left; }
+  .foil-compare tbody th, .foil-compare td { border: 0; padding: .7rem 1rem; }
+  .foil-compare tbody th { width: auto; background: var(--teal-soft); color: var(--teal-deep); }
+  .foil-compare td::before { content: attr(data-label); display: block; margin-bottom: .2rem; color: var(--muted); font-size: .78rem; font-weight: 700; }
+  .foil-compare td + td { border-top: 1px solid var(--line); }
+  .foil-actions { flex-direction: column-reverse; align-items: stretch; text-align: center; }
+}
+
+/* 桌面導覽：膠囊滑塊跟隨 */
+.nav-track { position: relative; display: flex; align-items: center; gap: inherit; }
+.nav-slider { position: absolute; top: 0; left: 0; z-index: 0; height: 100%; border-radius: 999px; background: var(--ink); opacity: 0; pointer-events: none; }
+.nav-slider.visible { opacity: 1; }
+.nav-track.is-animated .nav-slider { transition: transform 400ms cubic-bezier(.2, .9, .3, 1.1), width 400ms cubic-bezier(.2, .9, .3, 1.1), opacity 200ms ease; }
+.nav-track .nav-link { position: relative; z-index: 1; transition: color 250ms ease; }
+.nav-track .nav-link:hover, .nav-track .nav-link.active { background: transparent; color: #38504a; }
+.nav-track .nav-link.on-slider { color: var(--paper); }
+.nav-track .nav-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .nav-track.is-animated .nav-slider { transition: opacity 200ms ease; } }
+
+/* 產品卡：框內微放大（框不動、圖片慢慢放大，標題列上移變清楚） */
+.product-card { --zoom-ease: cubic-bezier(.2, .7, .2, 1); transition: box-shadow .8s var(--zoom-ease); }
+.product-card:hover { transform: none; box-shadow: var(--shadow-soft); }
+.product-card > .placeholder-art { isolation: isolate; }
+.product-card-image img, .product-card .placeholder-object { transition: transform .8s var(--zoom-ease); will-change: transform; }
+.product-card .object-back { --tilt: 8deg; }
+.product-card .object-front { --tilt: -7deg; }
+.product-card .placeholder-object { transform: rotate(var(--tilt)); }
+.product-card:hover .product-card-image img { transform: scale(1.1); }
+.product-card:hover .placeholder-object { transform: rotate(var(--tilt)) scale(1.1); }
+.product-card-body { position: relative; z-index: 1; }
+.product-card-body::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 56px; background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 55%)); pointer-events: none; }
+.product-card-body > * { transition: transform .8s var(--zoom-ease), opacity .8s var(--zoom-ease); }
+@media (hover: hover) {
+  .product-card-body > * { opacity: .78; transform: translateY(6px); }
+  .product-card:hover .product-card-body > * { opacity: 1; transform: translateY(0); }
+  .product-card-link:focus-visible .product-card-body > * { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card-image img, .product-card .placeholder-object, .product-card-body > * { transition: none; }
+  .product-card:hover .product-card-image img { transform: none; }
+  .product-card:hover .placeholder-object { transform: rotate(var(--tilt)); }
+}
+
+/* 各頁 Banner 文字：柔和上浮（由上到下依序淡入，間隔 .14s、每段 .9s，等同 GSAP power2.out） */
+@keyframes gentle-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+:is(
+  .home-hero-copy > *,
+  .inner-image-hero-copy > h1,
+  .inner-image-hero-copy .image-page-hero-description > p,
+  .inner-image-hero-copy > .hero-actions,
+  .faq-intro-inner > div > *,
+  .faq-intro-inner > .faq-search,
+  .page-hero .page-container > *,
+  .product-detail-header > *,
+  .foil-intro > .foil-meta,
+  .foil-intro > .eyebrow,
+  .foil-intro > h1
+) { animation: gentle-fade-up .9s cubic-bezier(.33, 1, .68, 1) both; animation-delay: calc(var(--fade-i, 0) * .14s); }
+:is(.home-hero-copy, .faq-intro-inner > div, .page-hero .page-container, .product-detail-header) > :nth-child(2) { --fade-i: 1; }
+:is(.home-hero-copy, .faq-intro-inner > div, .page-hero .page-container, .product-detail-header) > :nth-child(3) { --fade-i: 2; }
+.inner-image-hero-copy .image-page-hero-description > p:nth-child(1) { --fade-i: 1; }
+.inner-image-hero-copy .image-page-hero-description > p:nth-child(2) { --fade-i: 2; }
+.inner-image-hero-copy > .hero-actions { --fade-i: 3; }
+.faq-intro-inner > .faq-search { --fade-i: 2; }
+.foil-intro > .eyebrow { --fade-i: 1; }
+.foil-intro > h1 { --fade-i: 2; }
+@media (prefers-reduced-motion: reduce) {
+  :is(.home-hero-copy > *, .inner-image-hero-copy > h1, .inner-image-hero-copy .image-page-hero-description > p, .inner-image-hero-copy > .hero-actions, .faq-intro-inner > div > *, .faq-intro-inner > .faq-search, .page-hero .page-container > *, .product-detail-header > *, .foil-intro > .foil-meta, .foil-intro > .eyebrow, .foil-intro > h1) { animation: none; }
+}
+/* 輪播 Banner：只有目前這一張播放，換張時重新上浮 */
+.home-hero-slide:not(.is-active) .home-hero-copy > * { animation: none; }
+
+/* 最新消息：手繪圈重點（先圈、再畫底線，停留後從起點收掉；pathLength=1，等同 DrawSVG 0%→100%→100% 100%） */
+.hand-mark { position: relative; display: inline-block; white-space: nowrap; }
+.hand-mark svg { position: absolute; overflow: visible; fill: none; stroke: var(--brown); stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.hand-mark-circle svg { inset: -.38em -.46em -.34em -.46em; width: calc(100% + .92em); height: calc(100% + .72em); stroke-width: 3.4; }
+.hand-mark-underline svg { left: -.08em; bottom: -.58em; width: calc(100% + .16em); height: .7em; stroke-width: 2.6; }
+.hand-mark path { stroke-dasharray: 1 2; stroke-dashoffset: 1; }
+.hand-drawn-title.is-drawn .hand-mark-circle path { animation: hand-draw-circle 3.6s both; }
+.hand-drawn-title.is-drawn .hand-mark-underline path { animation: hand-draw-underline 3.6s both; }
+@keyframes hand-draw-circle {
+  0% { stroke-dashoffset: 1; animation-timing-function: cubic-bezier(.45, .05, .25, 1); }
+  23.6% { stroke-dashoffset: 0; }
+  83.3% { stroke-dashoffset: 0; animation-timing-function: cubic-bezier(.55, 0, .45, 1); }
+  100% { stroke-dashoffset: -1; }
+}
+@keyframes hand-draw-underline {
+  0%, 23.6% { stroke-dashoffset: 1; animation-timing-function: cubic-bezier(.33, 1, .68, 1); }
+  38.9% { stroke-dashoffset: 0; }
+  83.3% { stroke-dashoffset: 0; animation-timing-function: cubic-bezier(.55, 0, .45, 1); }
+  100% { stroke-dashoffset: -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hand-mark svg { display: none; }
+  .hand-mark-underline { text-decoration: underline 2px var(--brown); text-underline-offset: .32em; }
+}

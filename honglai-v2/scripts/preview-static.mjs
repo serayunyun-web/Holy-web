@@ -4,7 +4,7 @@ import { extname, join, normalize, resolve } from "node:path";
 
 const root = resolve("out");
 const port = Number(process.env.PORT || 4173);
-const types = { ".css": "text/css", ".glb": "model/gltf-binary", ".html": "text/html", ".ico": "image/x-icon", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".webp": "image/webp" };
+const types = { ".css": "text/css", ".glb": "model/gltf-binary", ".html": "text/html", ".ico": "image/x-icon", ".mp4": "video/mp4", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".webp": "image/webp" };
 
 if (!existsSync(join(root, "index.html"))) {
   console.error("找不到 out/index.html，請先執行 npm run build。");
